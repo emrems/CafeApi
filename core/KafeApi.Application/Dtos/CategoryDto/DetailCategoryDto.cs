@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace KafeApi.Application.Dtos.CategoryDto
 {
-    public class DetailCategoryDto
+    public class DetailCategoryDto 
     {
         public int Id { get; set; }
         public string Name { get; set; }

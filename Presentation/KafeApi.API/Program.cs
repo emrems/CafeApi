@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Scalar.AspNetCore;
+using FluentValidation;
+using KafeApi.Application.Dtos.CategoryDto;
 
 internal class Program
 {
@@ -31,6 +33,10 @@ internal class Program
 
         // AutoMapper konfigürasyonu
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+        // FluentValidation konfigürasyonu
+        builder.Services.AddValidatorsFromAssemblyContaining<CreateCategoryDto>();
+        builder.Services.AddValidatorsFromAssemblyContaining<UpdateCategoryDto>();
 
         // OpenAPI servisini ekle
         builder.Services.AddOpenApi();

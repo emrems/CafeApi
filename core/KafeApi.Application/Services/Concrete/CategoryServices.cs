@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using KafeApi.Application.Dtos.CategoryDto;
+using KafeApi.Application.Dtos.ResponseDtos;
 using KafeApi.Application.Interfaces;
 using KafeApi.Application.Services.Abstract;
 using KafeApi.Domain.Entities;
@@ -15,86 +17,214 @@ namespace KafeApi.Application.Services.Concrete
     {
         private readonly IGenericRepository<Category> _categoryRepository;
         private readonly IMapper _mapper;
+        private readonly IValidator<CreateCategoryDto> _createCategoryValidator;
+        private readonly IValidator<UpdateCategoryDto> _updateCategoryValidator;
 
-        public CategoryServices(IGenericRepository<Category> categoryRepository, IMapper mapper)
+        public CategoryServices(IGenericRepository<Category> categoryRepository, IMapper mapper, IValidator<CreateCategoryDto> createCategoryValidator = null, IValidator<UpdateCategoryDto> updateCategoryValidator = null)
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
+            _createCategoryValidator = createCategoryValidator;
+            _updateCategoryValidator = updateCategoryValidator;
         }
 
-        public async Task AddCategory(CreateCategoryDto dto)
+        public async Task<ResponseDto<object>> AddCategory(CreateCategoryDto dto)
         {
-            if (dto == null)
+            try
             {
-                throw new ArgumentNullException(nameof(dto), "Category DTO cannot be null");
+                // DTO validasyon
+                var validationResult = await _createCategoryValidator.ValidateAsync(dto);
+                if (!validationResult.IsValid)
+                {
+                    return new ResponseDto<object>
+                    {
+                        Success = false,
+                        Data = null,
+                        Message = string.Join("|", validationResult.Errors.Select(e => e.ErrorMessage)),
+                        ErrorCodes = ErrorCodes.ValidationError,
+                       
+                    };
+                }
+                var category = _mapper.Map<Category>(dto);
+                await _categoryRepository.AddAsync(category);
+                return new ResponseDto<object>
+                {
+                    Success = true,
+                    Data = null,
+                    Message = "Kategori eklendi",
+                    
+                };
+
+            } catch (Exception ex)
+            {
+                return new ResponseDto<object>
+                {
+                    Success = false,
+                    Data = null,
+                    Message = "bir hata oluştu",
+                    ErrorCodes = ErrorCodes.Exception
+                };
             }
 
-            // Map CreateCategoryDto to Category entity
-            var category = _mapper.Map<Category>(dto);
-
-
-            await _categoryRepository.AddAsync(category);
-             
         }
 
-        public async Task DeleteCategory(int id)
+        public async Task<ResponseDto<object>> DeleteCategory(int id)
         {
-            var category = await _categoryRepository.GetByIdAsync(id);
-            if (category == null)
+            try
             {
-                throw new KeyNotFoundException($"{id} li category bulunamadı");
+                var category = await _categoryRepository.GetByIdAsync(id);
+                if (category == null)
+                {
+                    new ResponseDto<object>()
+                    {
+                        Success = false,
+                        Message = $"{id} li category bulunamadı",
+                        ErrorCodes = ErrorCodes.NotFound,
+                        Data = null
+                    };
+                }
+                await _categoryRepository.DeleteAsync(category);
+                return new ResponseDto<object>()
+                {
+                    Success = true,
+                    Message = $"{id} li category silindi",
+                    Data = null
+                };
+
             }
-            await _categoryRepository.DeleteAsync(category);
+            catch (Exception ex)
+            {
+                return new ResponseDto<object>()
+                {
+                    Success = false,
+                    Message = "bir hata oluştu",
+                    ErrorCodes = ErrorCodes.Exception,
+                    Data = null
+                };
 
 
+            }
         }
 
-        public async Task<List<ResultCategoryDto>> GetAllCategories()
+        public async Task<ResponseDto<List<ResultCategoryDto>>> GetAllCategories()
         {
             try
             {
                 var categories = await _categoryRepository.GetAllAsync();
-                if (categories == null )
+                if (categories.Count == 0)
                 {
-                    throw new InvalidOperationException("No categories found.");
+                    return new ResponseDto<List<ResultCategoryDto>>()
+                    {
+                        Data = new List<ResultCategoryDto>(),
+                        Success = false,
+                        Message = "Kategori bulunamadı",
+                        ErrorCodes = ErrorCodes.NotFound
+                    };
                 }
                 // category mapplenecek
                 var ResultCategoryDtos = _mapper.Map<List<ResultCategoryDto>>(categories);
-                return ResultCategoryDtos;
+                return new ResponseDto<List<ResultCategoryDto>> { Data = ResultCategoryDtos, Success = true };
 
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-                throw new Exception("An error occurred while retrieving categories", ex);
+                return new ResponseDto<List<ResultCategoryDto>>()
+                {
+                    Success = false,
+                    Message = "bir hata oluştu",
+                    ErrorCodes = ErrorCodes.Exception,
+                    Data = null
+                };
 
             }
         }
-        public async Task<DetailCategoryDto> GetCategoryById(int id)
+        public async Task<ResponseDto<DetailCategoryDto>> GetCategoryById(int id)
         {
-            var category = await _categoryRepository.GetByIdAsync(id);
-            if (category == null)
+            try
             {
-                throw new KeyNotFoundException($"{id} li category bulunamadı");
+                var category = await _categoryRepository.GetByIdAsync(id);
+                if (category == null)
+                {
+                    return new ResponseDto<DetailCategoryDto>
+                    {
+                        Success = false,
+                        Message = $"{id} li category bulunamadı",
+                        ErrorCodes = ErrorCodes.NotFound,
+                        Data = null
+                    };
+                }
+                // category mapplenecek  
+                var detailCategoryDto = _mapper.Map<DetailCategoryDto>(category);
+                return new ResponseDto<DetailCategoryDto>
+                {
+                    Success = true,
+                    Data = detailCategoryDto
+                };
             }
-            // category mapplenecek  
-            var detailCategoryDto = _mapper.Map<DetailCategoryDto>(category);
-            return detailCategoryDto;
+            catch (Exception ex)
+            {
+                return new ResponseDto<DetailCategoryDto>
+                {
+                    Success = false,
+                    Message = "bir hata oluştu",
+                    ErrorCodes = ErrorCodes.Exception,
+                    Data = null
+                };
+            }
         }
 
-        public async Task UpdateCategory(UpdateCategoryDto dto)
+        public async Task<ResponseDto<object>> UpdateCategory(UpdateCategoryDto dto)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto), "category null olamaz");
+            try
+            {
+                // DTO validasyon
+                var validationResult = await _updateCategoryValidator.ValidateAsync(dto);
+                if (!validationResult.IsValid)
+                {
+                    return new ResponseDto<object>
+                    {
+                        Success = false,
+                        Data = null,
+                        Message = string.Join("|", validationResult.Errors.Select(e => e.ErrorMessage)),
+                        ErrorCodes = ErrorCodes.ValidationError
+                    };
+                }
 
-            var category = await _categoryRepository.GetByIdAsync(dto.Id);
-            if (category == null)
-                throw new KeyNotFoundException($"{dto.Id} li category bulunamadı");
+                var category = await _categoryRepository.GetByIdAsync(dto.Id);
 
-            // DTO -> mevcut Category
-            _mapper.Map(dto, category);
+                if (category == null)
+                {
+                    return new ResponseDto<object>()
+                    {
+                        Success = false,
+                        Message = $"{dto.Id} li category bulunamadı",
+                        ErrorCodes = ErrorCodes.NotFound,
+                        Data = null
+                    };
+                }
 
-            await _categoryRepository.UpdateAsync(category);
+                // DTO -> mevcut Category
+                _mapper.Map(dto, category);
+
+                await _categoryRepository.UpdateAsync(category);
+                return new ResponseDto<object>()
+                {
+                    Success = true,
+                    Message = $"{dto.Id} li category güncellendi",
+                    Data = null
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto<object>()
+                {
+                    Success = false,
+                    Message = "bir hata oluştu",
+                    ErrorCodes = ErrorCodes.Exception,
+                    Data = null
+                };
+            }
         }
-
     }
 }
