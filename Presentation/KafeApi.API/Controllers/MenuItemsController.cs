@@ -1,4 +1,5 @@
 ﻿using KafeApi.Application.Dtos.MenuItemDto;
+using KafeApi.Application.Dtos.ResponseDtos;
 using KafeApi.Application.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,17 @@ namespace KafeApi.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllMenuItems()
         {
+           
             var menuItems = await _menuItemServices.GetAllMenuItems();
+            if (!menuItems.Success)
+            {
+                if (menuItems.ErrorCodes == ErrorCodes.NotFound)
+                {
+                    return NotFound(menuItems);
+                }
+                return BadRequest(menuItems);
+               
+            }
             return Ok(menuItems);
         }
 
@@ -25,6 +36,14 @@ namespace KafeApi.API.Controllers
         public async Task<IActionResult> GetMenuItemById(int id)
         {
             var menuItem = await _menuItemServices.GetMenuItemById(id);
+            if (!menuItem.Success)
+            {
+                if (menuItem.ErrorCodes == ErrorCodes.NotFound)
+                {
+                    return NotFound(menuItem);
+                }
+                return BadRequest(menuItem);
+            }
             return Ok(menuItem);
 
         }

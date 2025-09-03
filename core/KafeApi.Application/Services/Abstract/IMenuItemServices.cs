@@ -1,4 +1,5 @@
 ﻿using KafeApi.Application.Dtos.MenuItemDto;
+using KafeApi.Application.Dtos.ResponseDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace KafeApi.Application.Services.Abstract
 {
     public interface IMenuItemServices
     {
-        Task<List<DetailMenuItemDto>> GetAllMenuItems();
-        Task<DetailMenuItemDto> GetMenuItemById(int id);
+        Task<ResponseDto<List<ResultMenuItemDto>>> GetAllMenuItems();
+        Task<ResponseDto<DetailMenuItemDto>> GetMenuItemById(int id);
         Task AddMenuItem(CreateMenuItemDto dto);
         Task UpdateMenuItem(UpdateMenuItemDto dto);
         Task DeleteMenuItem(int id);

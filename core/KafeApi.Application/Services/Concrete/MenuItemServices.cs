@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using KafeApi.Application.Dtos.MenuItemDto;
+using KafeApi.Application.Dtos.ResponseDtos;
 using KafeApi.Application.Interfaces;
 using KafeApi.Application.Services.Abstract;
 using KafeApi.Domain.Entities;
@@ -44,28 +45,84 @@ namespace KafeApi.Application.Services.Concrete
             await _menuItemRepository.DeleteAsync(menuItem);
         }
 
-        public async Task<List<DetailMenuItemDto>> GetAllMenuItems()
+        public async Task<ResponseDto<List<ResultMenuItemDto>>> GetAllMenuItems()
         {
-            var menuItems =  await _menuItemRepository.GetAllAsync();
-            if (menuItems == null || !menuItems.Any())
+            try
             {
-                menuItems = new List<MenuItem>();
+                var menuItems = await _menuItemRepository.GetAllAsync();
+                if (menuItems == null || !menuItems.Any())
+                {
+                    return new ResponseDto<List<ResultMenuItemDto>>
+                    {
+                        ErrorCodes = ErrorCodes.NotFound,
+                        Success = false,
+                        Message = "Hiç menu item bulunamadı",
+                        Data = null
+                    };
+                }
+                // Map List<MenuItem> to List<DetailMenuItemDto>
+                var menuItemDtos = _mapper.Map<List<ResultMenuItemDto>>(menuItems);
+                return new ResponseDto<List<ResultMenuItemDto>>
+                {
+                    Success = true,
+                    Message = $"{menuItemDtos.Count} adet menu item bulundu",
+                    Data = menuItemDtos
+                };
+
             }
-            // Map List<MenuItem> to List<DetailMenuItemDto>
-            var menuItemDtos = _mapper.Map<List<DetailMenuItemDto>>(menuItems);
-            return menuItemDtos;
+            catch (Exception)
+            {
+
+                return new ResponseDto<List<ResultMenuItemDto>>
+                {
+                    Success = false,
+                    Message = "Bir hata oluştu",
+                    Data = null,
+                    ErrorCodes = ErrorCodes.Exception
+                };
+            }
+          
         }
 
-        public async Task<DetailMenuItemDto> GetMenuItemById(int id)
+        public async Task<ResponseDto<DetailMenuItemDto>> GetMenuItemById(int id)
         {
-            var menuItem = await _menuItemRepository.GetByIdAsync(id);
-            if (menuItem == null)
+            try
             {
-                throw new KeyNotFoundException($"{id} li menu item bulunamadı");
+                var menuItem = await _menuItemRepository.GetByIdAsync(id);
+                if (menuItem == null)
+                {
+                    return new ResponseDto<DetailMenuItemDto>
+                    {
+                        ErrorCodes = ErrorCodes.NotFound,
+                        Success = false,
+                        Message = $"{id} li menu item bulunamadı",
+                        Data = null
+                    };
+                }
+                // Map MenuItem to DetailMenuItemDto
+                var menuItemDto = _mapper.Map<DetailMenuItemDto>(menuItem);
+                return new ResponseDto<DetailMenuItemDto>
+                {
+                    Success = true,
+                    Message = $"{id} li menu item bulundu",
+                    Data = menuItemDto
+                };
+
             }
-            // Map MenuItem to DetailMenuItemDto
-            var menuItemDto = _mapper.Map<DetailMenuItemDto>(menuItem);
-            return menuItemDto;
+            catch (Exception)
+            {
+
+                return new ResponseDto<DetailMenuItemDto>
+                {
+                    Success = false,
+                    Message = "Bir hata oluştu",
+                    Data = null,
+                    ErrorCodes = ErrorCodes.Exception
+
+                };
+            }
+
+            
         }
 
         public async Task UpdateMenuItem(UpdateMenuItemDto dto)
