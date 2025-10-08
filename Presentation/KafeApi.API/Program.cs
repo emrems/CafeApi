@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Scalar.AspNetCore;
 using FluentValidation;
 using KafeApi.Application.Dtos.CategoryDto;
+using KafeApi.Application.Dtos.MenuItemDto;
 
 internal class Program
 {
@@ -37,6 +38,10 @@ internal class Program
         // FluentValidation konfigürasyonu
         builder.Services.AddValidatorsFromAssemblyContaining<CreateCategoryDto>();
         builder.Services.AddValidatorsFromAssemblyContaining<UpdateCategoryDto>();
+
+        builder.Services.AddValidatorsFromAssemblyContaining<CreateMenuItemDto>();
+
+        builder.Services.AddValidatorsFromAssemblyContaining<UpdateMenuItemDto>();
 
         // OpenAPI servisini ekle
         builder.Services.AddOpenApi();

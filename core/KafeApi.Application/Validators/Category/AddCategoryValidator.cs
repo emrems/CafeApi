@@ -15,6 +15,8 @@ namespace KafeApi.Application.Validators.Category
             RuleFor(x => x.Name)
             .NotEmpty().WithMessage("kategori adı boş olamaz")
             .Length(3, 50).WithMessage("kategori adı 3 ile 50 arasında olmalı");
+            
+            
         }
     }
 }

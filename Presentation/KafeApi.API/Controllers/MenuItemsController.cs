@@ -50,25 +50,47 @@ namespace KafeApi.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddMenuItem([FromBody] CreateMenuItemDto dto)
         {
-            if (dto == null)
+            
+            var result = await _menuItemServices.AddMenuItem(dto);
+            if (!result.Success)
             {
-                return BadRequest("MenuItem boş olamaz");
+                if(result.ErrorCodes == ErrorCodes.ValidationError)
+                {
+                    return Ok(result);
+                }
+                return BadRequest(result);
             }
-            await _menuItemServices.AddMenuItem(dto);
-            return StatusCode(201, "MenuItem başarıyla eklendi.");
+            return Ok(result);
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateMenuItem(UpdateMenuItemDto dto)
         {
-            await _menuItemServices.UpdateMenuItem(dto);
-            return Ok("MenuItem başarıyla güncellendi.");
+           var result= await _menuItemServices.UpdateMenuItem(dto);
+            if (!result.Success)
+            {
+                if (result.ErrorCodes == ErrorCodes.NotFound || result.ErrorCodes == ErrorCodes.ValidationError)
+                {
+                    return Ok(result);
+                }
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMenuItem(int id)
         {
-            await _menuItemServices.DeleteMenuItem(id);
-            return NoContent(); 
+            var result= await _menuItemServices.DeleteMenuItem(id);
+            if (!result.Success) 
+            {
+                if (result.ErrorCodes == ErrorCodes.NotFound)
+                {
+                    return NotFound(result);
+                }
+                return BadRequest(result);
+
+            }
+            return Ok("menuItem başarıyla silindi");
         }
     }
 }
