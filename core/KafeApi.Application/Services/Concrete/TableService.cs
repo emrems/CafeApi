@@ -240,17 +240,18 @@ namespace KafeApi.Application.Services.Concrete
                         ErrorCodes = ErrorCodes.ValidationError,
                     };
                 }
-               // var checkTable = await _tableRepo.GetByTableNumberAsync(updateTableDto.TableNumber);
-                //if (checkTable is not null)
-                //{
-                //    return new ResponseDto<object>
-                //    {
-                //        Success = false,
-                //        Data = null,
-                //        Message = $"{updateTableDto.TableNumber} numaralı masa zaten mevcuttur",
-                //        ErrorCodes = ErrorCodes.DubplicateEntry,
-                //    };
-                //}
+
+                var table = await _tableRepository.GetByIdAsync(updateTableDto.Id);
+                if (table == null)
+                {
+                    return new ResponseDto<object>
+                    {
+                        Success = false,
+                        Data = null,
+                        Message = "güncellenecek masa bulunamadı",
+                        ErrorCodes = ErrorCodes.NotFound,
+                    };
+                }
                 var result = _mapper.Map<Table>(updateTableDto);
                 await _tableRepository.UpdateAsync(result);
                 return new ResponseDto<object>

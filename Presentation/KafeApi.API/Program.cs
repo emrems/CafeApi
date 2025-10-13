@@ -18,8 +18,7 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Servisleri konteynere ekle (Add services to the container)
-        // Her şey app.Build() öncesinde burada olmalı
+        
 
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -31,6 +30,8 @@ internal class Program
         builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         builder.Services.AddScoped<ICategoriyServices, CategoryServices>();
         builder.Services.AddScoped<IMenuItemServices, MenuItemServices>();
+        builder.Services.AddScoped<ITableRepository, TableRepository>();
+        builder.Services.AddScoped<ITableServices, TableService>();
 
         // AutoMapper konfigürasyonu
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
