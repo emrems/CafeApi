@@ -2,21 +2,24 @@
 using KafeApi.Domain.Entities;
 using KafeApi.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace KafeApi.Persistance.Repository
 {
-    public class TableRepository :  ITableRepository
+    public class TableRepository : ITableRepository
     {
        private readonly AppDbContext _context;
 
         public TableRepository(AppDbContext context)
         {
             _context = context;
+        }
+
+        public Task<List<Table>> GetActiveTable()
+        {
+            var tables = _context.Tables.Where(x => x.IsActive).ToListAsync();
+            return tables;
+            
         }
 
         public async  Task<Table> GetByTableNumberAsync(int tableNumber)

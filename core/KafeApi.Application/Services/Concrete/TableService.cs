@@ -5,11 +5,6 @@ using KafeApi.Application.Dtos.TableDtos;
 using KafeApi.Application.Interfaces;
 using KafeApi.Application.Services.Abstract;
 using KafeApi.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KafeApi.Application.Services.Concrete
 {
@@ -117,6 +112,42 @@ namespace KafeApi.Application.Services.Concrete
             }
         }
 
+        public async Task<ResponseDto<List<ResultTableDto>>> GetAllActiveTables()
+        {
+            try
+            {
+                var tables = await _tableRepo.GetActiveTable();
+                if (tables == null)
+                {
+                    return new ResponseDto<List<ResultTableDto>>
+                    {
+                        Success = false,
+                        Data = null,
+                        Message = "aktif masa bulunamadı",
+                        ErrorCodes = ErrorCodes.NotFound
+                    };
+                }
+                var tableDto = _mapper.Map<List<ResultTableDto>>(tables);
+                return new ResponseDto<List<ResultTableDto>>
+                {
+                    Success = true,
+                    Data = tableDto,
+                    Message = "aktif masalar başarılı bir şekilde çekildi"
+                };
+            }
+            catch (Exception)
+            {
+
+                return new ResponseDto<List<ResultTableDto>>
+                {
+                    Success = false,
+                    Data = null,
+                    Message = "bir hata oluştu",
+                    ErrorCodes = ErrorCodes.Exception
+                };
+            }
+        }
+
         public async Task<ResponseDto<DetailTableDto>> GetTableById(int id)
         {
             try
@@ -194,7 +225,7 @@ namespace KafeApi.Application.Services.Concrete
             try
             {
                 var tables = await _tableRepository.GetAllAsync();
-                if(tables == null || !tables.Any())
+                if(tables == null )
                 {
                     return new ResponseDto<List<ResultTableDto>>
                     {
@@ -275,6 +306,82 @@ namespace KafeApi.Application.Services.Concrete
                 };
             }
             
+        }
+
+        public async Task<ResponseDto<object>> UpdateTableStatusById(int id)
+        {
+            try
+            {
+                var tables = await _tableRepository.GetByIdAsync(id);
+                if (tables is null)
+                {
+                    return new ResponseDto<object>
+                    {
+                        Success = false,
+                        Data = null,
+                        Message = "güncellenecek masa bulunamadı",
+                        ErrorCodes = ErrorCodes.NotFound,
+                    };
+                }
+                tables.IsActive = !tables.IsActive;
+                await _tableRepository.UpdateAsync(tables);
+                return new ResponseDto<object>
+                {
+                    Success = true,
+                    Data = null,
+                    Message = "masa durumu başarılı bir şekilde güncellendi",
+                    ErrorCodes = null,
+                };
+
+            }
+            catch (Exception)
+            {
+
+                return new ResponseDto<object>
+                {
+                    Success = false,
+                    Data = null,
+                    Message = "bir sorun oluştu",
+                    ErrorCodes = ErrorCodes.Exception,
+                };
+            }
+        }
+
+        public async Task<ResponseDto<object>> UpdateTableStatusByTableNumber(int tableNumber)
+        {
+            try
+            {
+                var tables = await _tableRepo.GetByTableNumberAsync(tableNumber);
+                if (tables is null)
+                {
+                    return new ResponseDto<object>
+                    {
+                        Success = false,
+                        Data = null,
+                        Message = "güncellenecek masa bulunamadı",
+                        ErrorCodes = ErrorCodes.NotFound,
+                    };
+                }
+                tables.IsActive = !tables.IsActive;
+                await _tableRepository.UpdateAsync(tables);
+                return new ResponseDto<object>
+                {
+                    Success = true,
+                    Data = null,
+                    Message = "masa durumu başarılı bir şekilde güncellendi",
+                    ErrorCodes = null,
+                };
+            }
+            catch (Exception)
+            {
+                return new ResponseDto<object>
+                {
+                    Success = false,
+                    Data = null,
+                    Message = "bir sorun oluştu",
+                    ErrorCodes = ErrorCodes.Exception,
+                };
+            }
         }
     }
 }

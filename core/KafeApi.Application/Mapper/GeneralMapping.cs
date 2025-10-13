@@ -27,6 +27,7 @@ namespace KafeApi.Application.Mapper
 
             CreateMap<Table,ResultTableDto>().ReverseMap();
             CreateMap<Table, DetailTableDto>().ReverseMap();
+            CreateMap<CreateTableDto, Table>().ReverseMap();
 
 
         }

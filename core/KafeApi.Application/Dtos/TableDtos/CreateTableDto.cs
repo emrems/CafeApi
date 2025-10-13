@@ -8,7 +8,7 @@ namespace KafeApi.Application.Dtos.TableDtos
 {
     public class CreateTableDto
     {
-        public int Id { get; set; }
+       
 
         public int TableNumber { get; set; }
         public bool IsActive { get; set; }

@@ -47,6 +47,21 @@ namespace KafeApi.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetActiveTables")]
+        public async Task<IActionResult> GetActiveTables()
+        {
+            var result = await _tableService.GetAllActiveTables();
+            if (!result.Success)
+            {
+                if (result.ErrorCodes == ErrorCodes.NotFound)
+                {
+                    return NotFound(result);
+                }
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
 
         [HttpGet("GetTableByNumber/{tableNumber}")]
         public async Task<IActionResult> GetTableByNumber(int tableNumber)
@@ -96,6 +111,36 @@ namespace KafeApi.API.Controllers
         public async Task<IActionResult> DeleteTable(int id)
         {
             var result = await _tableService.DeleteTable(id);
+            if (!result.Success)
+            {
+                if (result.ErrorCodes == ErrorCodes.NotFound)
+                {
+                    return NotFound(result);
+                }
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPatch("UpdateTableStatusById/{id}")]
+        public async Task<IActionResult> UpdateTableStatusById(int id)
+        {
+            var result = await _tableService.UpdateTableStatusById(id);
+            if (!result.Success)
+            {
+                if (result.ErrorCodes == ErrorCodes.NotFound)
+                {
+                    return NotFound(result);
+                }
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPatch("UpdateTableStatusByTableNumber/{tableNumber}")]
+        public async Task<IActionResult> UpdateTableStatusByTableNumber(int tableNumber)
+        {
+            var result = await _tableService.UpdateTableStatusByTableNumber(tableNumber);
             if (!result.Success)
             {
                 if (result.ErrorCodes == ErrorCodes.NotFound)
