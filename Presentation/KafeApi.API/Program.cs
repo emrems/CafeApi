@@ -33,6 +33,7 @@ internal class Program
         builder.Services.AddScoped<ITableRepository, TableRepository>();
         builder.Services.AddScoped<ITableServices, TableService>();
         builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+        builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 
         // AutoMapper konfigürasyonu
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

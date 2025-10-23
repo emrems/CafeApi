@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using KafeApi.Application.Dtos.CategoryDto;
 using KafeApi.Application.Dtos.MenuItemDto;
+using KafeApi.Application.Dtos.OrderItemDtos;
 using KafeApi.Application.Dtos.TableDtos;
 using KafeApi.Domain.Entities;
 using System;
@@ -28,6 +29,12 @@ namespace KafeApi.Application.Mapper
             CreateMap<Table,ResultTableDto>().ReverseMap();
             CreateMap<Table, DetailTableDto>().ReverseMap();
             CreateMap<CreateTableDto, Table>().ReverseMap();
+
+            CreateMap<CreateOrderItemDto, OrderItem>().ReverseMap();
+            CreateMap<ResultOrderItemDto, OrderItem>().ReverseMap();
+            CreateMap<DetailOrderItemDto, OrderItem>().ReverseMap();
+            CreateMap<UpdateOrderItemDto, OrderItem>().ReverseMap();
+
 
 
         }
