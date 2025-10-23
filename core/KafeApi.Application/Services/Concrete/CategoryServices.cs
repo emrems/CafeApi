@@ -5,11 +5,6 @@ using KafeApi.Application.Dtos.ResponseDtos;
 using KafeApi.Application.Interfaces;
 using KafeApi.Application.Services.Abstract;
 using KafeApi.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KafeApi.Application.Services.Concrete
 {
@@ -41,7 +36,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Data = null,
                         Message = string.Join("|", validationResult.Errors.Select(e => e.ErrorMessage)),
-                        ErrorCodes = ErrorCodes.ValidationError,
+                        ErrorCode = ErrorCodes.ValidationError,
                        
                     };
                 }
@@ -62,7 +57,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = false,
                     Data = null,
                     Message = "bir hata oluştu",
-                    ErrorCodes = ErrorCodes.Exception
+                    ErrorCode = ErrorCodes.Exception
                 };
             }
 
@@ -79,7 +74,7 @@ namespace KafeApi.Application.Services.Concrete
                     {
                         Success = false,
                         Message = $"{id} li category bulunamadı",
-                        ErrorCodes = ErrorCodes.NotFound,
+                        ErrorCode = ErrorCodes.NotFound,
                         Data = null
                     };
                 }
@@ -98,7 +93,7 @@ namespace KafeApi.Application.Services.Concrete
                 {
                     Success = false,
                     Message = "bir hata oluştu",
-                    ErrorCodes = ErrorCodes.Exception,
+                    ErrorCode = ErrorCodes.Exception,
                     Data = null
                 };
 
@@ -118,7 +113,7 @@ namespace KafeApi.Application.Services.Concrete
                         Data = new List<ResultCategoryDto>(),
                         Success = false,
                         Message = "Kategori bulunamadı",
-                        ErrorCodes = ErrorCodes.NotFound
+                        ErrorCode = ErrorCodes.NotFound
                     };
                 }
                 // category mapplenecek
@@ -133,7 +128,7 @@ namespace KafeApi.Application.Services.Concrete
                 {
                     Success = false,
                     Message = "bir hata oluştu",
-                    ErrorCodes = ErrorCodes.Exception,
+                    ErrorCode = ErrorCodes.Exception,
                     Data = null
                 };
 
@@ -150,7 +145,7 @@ namespace KafeApi.Application.Services.Concrete
                     {
                         Success = false,
                         Message = $"{id} li category bulunamadı",
-                        ErrorCodes = ErrorCodes.NotFound,
+                        ErrorCode = ErrorCodes.NotFound,
                         Data = null
                     };
                 }
@@ -168,7 +163,7 @@ namespace KafeApi.Application.Services.Concrete
                 {
                     Success = false,
                     Message = "bir hata oluştu",
-                    ErrorCodes = ErrorCodes.Exception,
+                    ErrorCode = ErrorCodes.Exception,
                     Data = null
                 };
             }
@@ -187,7 +182,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Data = null,
                         Message = string.Join("|", validationResult.Errors.Select(e => e.ErrorMessage)),
-                        ErrorCodes = ErrorCodes.ValidationError
+                        ErrorCode = ErrorCodes.ValidationError
                     };
                 }
 
@@ -199,7 +194,7 @@ namespace KafeApi.Application.Services.Concrete
                     {
                         Success = false,
                         Message = $"{dto.Id} li category bulunamadı",
-                        ErrorCodes = ErrorCodes.NotFound,
+                        ErrorCode = ErrorCodes.NotFound,
                         Data = null
                     };
                 }
@@ -221,7 +216,7 @@ namespace KafeApi.Application.Services.Concrete
                 {
                     Success = false,
                     Message = "bir hata oluştu",
-                    ErrorCodes = ErrorCodes.Exception,
+                    ErrorCode = ErrorCodes.Exception,
                     Data = null
                 };
             }

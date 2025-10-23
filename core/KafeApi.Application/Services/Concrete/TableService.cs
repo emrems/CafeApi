@@ -36,7 +36,7 @@ namespace KafeApi.Application.Services.Concrete
                         Data = null,
                         Success = false,
                         Message = "doğrulama hatası",
-                        ErrorCodes = string.Join(",", result.Errors.Select(x => x.ErrorMessage))
+                        ErrorCode = string.Join(",", result.Errors.Select(x => x.ErrorMessage))
                     };
                 }
                 // aynı masa var olup olmadığı kontrolü
@@ -48,7 +48,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Data = null,
                         Message=$"{createTableDto.TableNumber} numaralı masa zaten mevcuttur",
-                        ErrorCodes=ErrorCodes.DubplicateEntry
+                        ErrorCode=ErrorCodes.DubplicateEntry
                     };
                 } 
                 var table = _mapper.Map<Table>(createTableDto);
@@ -69,7 +69,7 @@ namespace KafeApi.Application.Services.Concrete
                     Data = null,
                     Success = false,
                     Message = "bir hata oluştu",
-                    ErrorCodes = ErrorCodes.Exception
+                    ErrorCode = ErrorCodes.Exception
                 };
             }
         }
@@ -86,7 +86,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Data = null,
                         Message=$"{id} li silinecek masa bulunamadı",
-                        ErrorCodes=ErrorCodes.NotFound
+                        ErrorCode=ErrorCodes.NotFound
                     };
                 }
 
@@ -95,7 +95,7 @@ namespace KafeApi.Application.Services.Concrete
                 {
                     Data=null,
                     Message="masa başarılı bir şekilde silindi",
-                    ErrorCodes=null,
+                    ErrorCode=null,
                     Success=true
                 };
             }
@@ -107,7 +107,7 @@ namespace KafeApi.Application.Services.Concrete
                     Data = null,
                     Success = false,
                     Message = "bir hata oluştu",
-                    ErrorCodes = ErrorCodes.Exception
+                    ErrorCode = ErrorCodes.Exception
                 };
             }
         }
@@ -124,7 +124,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Data = null,
                         Message = "aktif masa bulunamadı",
-                        ErrorCodes = ErrorCodes.NotFound
+                        ErrorCode = ErrorCodes.NotFound
                     };
                 }
                 var tableDto = _mapper.Map<List<ResultTableDto>>(tables);
@@ -143,7 +143,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = false,
                     Data = null,
                     Message = "bir hata oluştu",
-                    ErrorCodes = ErrorCodes.Exception
+                    ErrorCode = ErrorCodes.Exception
                 };
             }
         }
@@ -160,7 +160,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Data = null,
                         Message = "böyle bir masa bulunamadı",
-                        ErrorCodes = ErrorCodes.NotFound
+                        ErrorCode = ErrorCodes.NotFound
                     };
                 }
                 var tableDto = _mapper.Map<DetailTableDto>(tables);
@@ -179,7 +179,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = false,
                     Data = null,
                     Message = "bir hata oluştu",
-                    ErrorCodes = ErrorCodes.Exception
+                    ErrorCode = ErrorCodes.Exception
                 };
             }
         }
@@ -196,7 +196,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Data = null,
                         Message = "böyle bir masa bulunamadı",
-                        ErrorCodes = ErrorCodes.NotFound
+                        ErrorCode = ErrorCodes.NotFound
                     };
                 }
                 var tableDto = _mapper.Map<DetailTableDto>(table);
@@ -215,7 +215,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = false,
                     Data = null,
                     Message = "bir hata oluştu",
-                    ErrorCodes = ErrorCodes.Exception
+                    ErrorCode = ErrorCodes.Exception
                 };
             }
         }
@@ -232,7 +232,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Data = null,
                         Message = "tablolar bulunamadı",
-                        ErrorCodes = ErrorCodes.NotFound,
+                        ErrorCode = ErrorCodes.NotFound,
                     };
                 }
                 var tableDto = _mapper.Map<List<ResultTableDto>>(tables);
@@ -250,7 +250,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = false,
                     Data = null,
                     Message = "bir hata oluştu",
-                    ErrorCodes = ex.Message
+                    ErrorCode = ex.Message
                 };
             }
 
@@ -268,7 +268,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Data = null,
                         Message = string.Join(",", validatorResult.Errors.Select(x =>x.ErrorMessage)),
-                        ErrorCodes = ErrorCodes.ValidationError,
+                        ErrorCode = ErrorCodes.ValidationError,
                     };
                 }
 
@@ -280,7 +280,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Data = null,
                         Message = "güncellenecek masa bulunamadı",
-                        ErrorCodes = ErrorCodes.NotFound,
+                        ErrorCode = ErrorCodes.NotFound,
                     };
                 }
                 var result = _mapper.Map<Table>(updateTableDto);
@@ -290,7 +290,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = true,
                     Data = null,
                     Message = "masa başarılı bir şekilde güncellendi",
-                    ErrorCodes = null,
+                    ErrorCode = null,
                 };
 
             }
@@ -302,7 +302,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success=false,
                     Data=null,
                     Message="bir sorun oluştu",
-                    ErrorCodes = ErrorCodes.Exception,
+                    ErrorCode = ErrorCodes.Exception,
                 };
             }
             
@@ -320,7 +320,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Data = null,
                         Message = "güncellenecek masa bulunamadı",
-                        ErrorCodes = ErrorCodes.NotFound,
+                        ErrorCode = ErrorCodes.NotFound,
                     };
                 }
                 tables.IsActive = !tables.IsActive;
@@ -330,7 +330,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = true,
                     Data = null,
                     Message = "masa durumu başarılı bir şekilde güncellendi",
-                    ErrorCodes = null,
+                    ErrorCode = null,
                 };
 
             }
@@ -342,7 +342,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = false,
                     Data = null,
                     Message = "bir sorun oluştu",
-                    ErrorCodes = ErrorCodes.Exception,
+                    ErrorCode = ErrorCodes.Exception,
                 };
             }
         }
@@ -359,7 +359,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Data = null,
                         Message = "güncellenecek masa bulunamadı",
-                        ErrorCodes = ErrorCodes.NotFound,
+                        ErrorCode = ErrorCodes.NotFound,
                     };
                 }
                 tables.IsActive = !tables.IsActive;
@@ -369,7 +369,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = true,
                     Data = null,
                     Message = "masa durumu başarılı bir şekilde güncellendi",
-                    ErrorCodes = null,
+                    ErrorCode = null,
                 };
             }
             catch (Exception)
@@ -379,7 +379,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = false,
                     Data = null,
                     Message = "bir sorun oluştu",
-                    ErrorCodes = ErrorCodes.Exception,
+                    ErrorCode = ErrorCodes.Exception,
                 };
             }
         }

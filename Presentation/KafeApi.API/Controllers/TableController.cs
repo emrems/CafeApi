@@ -22,7 +22,7 @@ namespace KafeApi.API.Controllers
             var result = await _tableService.GetTableList();
             if (!result.Success)
             {
-                if(result.ErrorCodes == ErrorCodes.NotFound)
+                if(result.ErrorCode == ErrorCodes.NotFound)
                 {
                     return NotFound(result);
                 }
@@ -38,7 +38,7 @@ namespace KafeApi.API.Controllers
             var result = await _tableService.GetTableById(id);
             if (!result.Success)
             {
-                if (result.ErrorCodes == ErrorCodes.NotFound)
+                if (result.ErrorCode == ErrorCodes.NotFound)
                 {
                     return NotFound(result);
                 }
@@ -53,7 +53,7 @@ namespace KafeApi.API.Controllers
             var result = await _tableService.GetAllActiveTables();
             if (!result.Success)
             {
-                if (result.ErrorCodes == ErrorCodes.NotFound)
+                if (result.ErrorCode == ErrorCodes.NotFound)
                 {
                     return NotFound(result);
                 }
@@ -69,7 +69,7 @@ namespace KafeApi.API.Controllers
             var result = await _tableService.GetTableByNumber(tableNumber);
             if (!result.Success)
             {
-                if (result.ErrorCodes == ErrorCodes.NotFound)
+                if (result.ErrorCode == ErrorCodes.NotFound)
                 {
                     return NotFound(result);
                 }
@@ -84,7 +84,7 @@ namespace KafeApi.API.Controllers
             var result = await _tableService.CreateTable(createTableDto);
             if (!result.Success)
             {
-                if (result.ErrorCodes is ErrorCodes.ValidationError or ErrorCodes.DubplicateEntry)
+                if (result.ErrorCode is ErrorCodes.ValidationError or ErrorCodes.DubplicateEntry)
                 {
                     return NotFound(result);
                 }
@@ -98,7 +98,7 @@ namespace KafeApi.API.Controllers
             var result = await _tableService.UpdateTable(updateTableDto);
             if (!result.Success)
             {
-                if (result.ErrorCodes is ErrorCodes.ValidationError or ErrorCodes.NotFound)
+                if (result.ErrorCode is ErrorCodes.ValidationError or ErrorCodes.NotFound)
                 {
                     return NotFound(result);
                 }
@@ -113,7 +113,7 @@ namespace KafeApi.API.Controllers
             var result = await _tableService.DeleteTable(id);
             if (!result.Success)
             {
-                if (result.ErrorCodes == ErrorCodes.NotFound)
+                if (result.ErrorCode == ErrorCodes.NotFound)
                 {
                     return NotFound(result);
                 }
@@ -128,7 +128,7 @@ namespace KafeApi.API.Controllers
             var result = await _tableService.UpdateTableStatusById(id);
             if (!result.Success)
             {
-                if (result.ErrorCodes == ErrorCodes.NotFound)
+                if (result.ErrorCode == ErrorCodes.NotFound)
                 {
                     return NotFound(result);
                 }
@@ -143,7 +143,7 @@ namespace KafeApi.API.Controllers
             var result = await _tableService.UpdateTableStatusByTableNumber(tableNumber);
             if (!result.Success)
             {
-                if (result.ErrorCodes == ErrorCodes.NotFound)
+                if (result.ErrorCode == ErrorCodes.NotFound)
                 {
                     return NotFound(result);
                 }

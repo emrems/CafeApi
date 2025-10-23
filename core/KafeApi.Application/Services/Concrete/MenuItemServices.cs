@@ -42,7 +42,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Message = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage)),
                         Data = null,
-                        ErrorCodes = ErrorCodes.ValidationError
+                        ErrorCode = ErrorCodes.ValidationError
                     };
                     
                 }
@@ -54,7 +54,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Message = "Eklemek istediğiniz kategori bulunamadı",
                         Data = null,
-                        ErrorCodes = ErrorCodes.ValidationError
+                        ErrorCode = ErrorCodes.ValidationError
                     };
                 }
                 var menuItem = _mapper.Map<MenuItem>(dto);
@@ -67,7 +67,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = false,
                     Message = "Bir hata oluştu",
                     Data = null,
-                    ErrorCodes = ErrorCodes.Exception
+                    ErrorCode = ErrorCodes.Exception
                 };
             }
             // Map CreateMenuItemDto to MenuItem entity
@@ -92,7 +92,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Message = $"{id} li menu item bulunamadı",
                         Data = null,
-                        ErrorCodes = ErrorCodes.NotFound
+                        ErrorCode = ErrorCodes.NotFound
                     };
                 }
                 await _menuItemRepository.DeleteAsync(menuItem);
@@ -111,7 +111,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = false,
                     Message = "Bir hata oluştu",
                     Data = null,
-                    ErrorCodes = ErrorCodes.Exception
+                    ErrorCode = ErrorCodes.Exception
                 };
             }
             
@@ -127,7 +127,7 @@ namespace KafeApi.Application.Services.Concrete
                 {
                     return new ResponseDto<List<ResultMenuItemDto>>
                     {
-                        ErrorCodes = ErrorCodes.NotFound,
+                        ErrorCode = ErrorCodes.NotFound,
                         Success = false,
                         Message = "Hiç menu item bulunamadı",
                         Data = null
@@ -151,7 +151,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = false,
                     Message = "Bir hata oluştu",
                     Data = null,
-                    ErrorCodes = ErrorCodes.Exception
+                    ErrorCode = ErrorCodes.Exception
                 };
             }
           
@@ -167,7 +167,7 @@ namespace KafeApi.Application.Services.Concrete
                 {
                     return new ResponseDto<DetailMenuItemDto>
                     {
-                        ErrorCodes = ErrorCodes.NotFound,
+                        ErrorCode = ErrorCodes.NotFound,
                         Success = false,
                         Message = $"{id} li menu item bulunamadı",
                         Data = null
@@ -191,7 +191,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = false,
                     Message = "Bir hata oluştu",
                     Data = null,
-                    ErrorCodes = ErrorCodes.Exception
+                    ErrorCode = ErrorCodes.Exception
 
                 };
             }
@@ -211,7 +211,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Message = string.Join(", ", menuItemDto.Errors.Select(e => e.ErrorMessage)),
                         Data = null,
-                        ErrorCodes = ErrorCodes.ValidationError
+                        ErrorCode = ErrorCodes.ValidationError
                     };
                 }
                 var menuItem = await _menuItemRepository.GetByIdAsync(dto.Id);
@@ -221,7 +221,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Message = $"{dto.Id} li menu item bulunamadı",
                         Data = null,
-                        ErrorCodes = ErrorCodes.NotFound
+                        ErrorCode = ErrorCodes.NotFound
                     };
                 var checkCategory = await _categoryRepository.GetByIdAsync(dto.CategoryId);
                 if (checkCategory == null)
@@ -231,7 +231,7 @@ namespace KafeApi.Application.Services.Concrete
                         Success = false,
                         Message = "Güncellemek istediğiniz kategori bulunamadı",
                         Data = null,
-                        ErrorCodes = ErrorCodes.ValidationError
+                        ErrorCode = ErrorCodes.ValidationError
                     };
                 }
 
@@ -256,7 +256,7 @@ namespace KafeApi.Application.Services.Concrete
                     Success = false,
                     Message = "Bir hata oluştu",
                     Data = null,
-                    ErrorCodes = ErrorCodes.Exception
+                    ErrorCode = ErrorCodes.Exception
                 };
             }
 

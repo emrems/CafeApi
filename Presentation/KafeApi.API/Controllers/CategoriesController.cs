@@ -22,7 +22,7 @@ namespace KafeApi.API.Controllers
             var categories = await _categoryServices.GetAllCategories();// burası bize responseDto döndürüyor
             if (!categories.Success)// ResponseDto'da Success false ise, yani hata varsa
             {
-                if (categories.ErrorCodes == ErrorCodes.NotFound)// 
+                if (categories.ErrorCode == ErrorCodes.NotFound)// 
                 {
                     return Ok(categories);
                 }
@@ -37,7 +37,7 @@ namespace KafeApi.API.Controllers
             var categories = await _categoryServices.GetCategoryById(id);
             if (!categories.Success)
             {
-                if (categories.ErrorCodes == ErrorCodes.NotFound)
+                if (categories.ErrorCode == ErrorCodes.NotFound)
                 {
                     return Ok(categories);
 
@@ -53,7 +53,7 @@ namespace KafeApi.API.Controllers
             var result =await _categoryServices.AddCategory(dto);
             if (!result.Success)
             {
-                if (result.ErrorCodes == ErrorCodes.ValidationError)
+                if (result.ErrorCode == ErrorCodes.ValidationError)
                 {
                     return Ok(result); // Validation hatası varsa, yani dto'da bir sorun varsa, bu durumda 200 OK ile birlikte hata mesajı döndürülür
                 }
@@ -69,7 +69,7 @@ namespace KafeApi.API.Controllers
             var result = await _categoryServices.UpdateCategory(dto);
             if (!result.Success)
             {
-                if (result.ErrorCodes is ErrorCodes.NotFound or ErrorCodes.ValidationError)
+                if (result.ErrorCode is ErrorCodes.NotFound or ErrorCodes.ValidationError)
                 {
                     return Ok(result);
                 }
@@ -85,7 +85,7 @@ namespace KafeApi.API.Controllers
             var result = await _categoryServices.DeleteCategory(id);
             if (!result.Success)
             {
-                if (result.ErrorCodes == ErrorCodes.NotFound)
+                if (result.ErrorCode == ErrorCodes.NotFound)
                 {
                     return NotFound(result.Message);
                 }

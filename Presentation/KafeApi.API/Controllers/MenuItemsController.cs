@@ -22,7 +22,7 @@ namespace KafeApi.API.Controllers
             var menuItems = await _menuItemServices.GetAllMenuItems();
             if (!menuItems.Success)
             {
-                if (menuItems.ErrorCodes == ErrorCodes.NotFound)
+                if (menuItems.ErrorCode == ErrorCodes.NotFound)
                 {
                     return NotFound(menuItems);
                 }
@@ -38,7 +38,7 @@ namespace KafeApi.API.Controllers
             var menuItem = await _menuItemServices.GetMenuItemById(id);
             if (!menuItem.Success)
             {
-                if (menuItem.ErrorCodes == ErrorCodes.NotFound)
+                if (menuItem.ErrorCode == ErrorCodes.NotFound)
                 {
                     return NotFound(menuItem);
                 }
@@ -54,7 +54,7 @@ namespace KafeApi.API.Controllers
             var result = await _menuItemServices.AddMenuItem(dto);
             if (!result.Success)
             {
-                if(result.ErrorCodes == ErrorCodes.ValidationError)
+                if(result.ErrorCode == ErrorCodes.ValidationError)
                 {
                     return Ok(result);
                 }
@@ -69,7 +69,7 @@ namespace KafeApi.API.Controllers
            var result= await _menuItemServices.UpdateMenuItem(dto);
             if (!result.Success)
             {
-                if (result.ErrorCodes == ErrorCodes.NotFound || result.ErrorCodes == ErrorCodes.ValidationError)
+                if (result.ErrorCode == ErrorCodes.NotFound || result.ErrorCode == ErrorCodes.ValidationError)
                 {
                     return Ok(result);
                 }
@@ -83,7 +83,7 @@ namespace KafeApi.API.Controllers
             var result= await _menuItemServices.DeleteMenuItem(id);
             if (!result.Success) 
             {
-                if (result.ErrorCodes == ErrorCodes.NotFound)
+                if (result.ErrorCode == ErrorCodes.NotFound)
                 {
                     return NotFound(result);
                 }

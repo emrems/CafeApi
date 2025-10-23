@@ -13,6 +13,8 @@ namespace KafeApi.Application.Dtos.ResponseDtos
         public const string Exception = "EXCEPTION";
         public const string ValidationError = "VALIDATION_ERROR";
         public const string DubplicateEntry = "DUPLICATE_ENTRY";
+        public const string Forbidden = "FORBIDDEN";
+        public const string BadRequest = "BAD_REQUEST";
 
     }
 }
