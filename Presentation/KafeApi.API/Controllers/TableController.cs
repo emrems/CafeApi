@@ -7,7 +7,7 @@ namespace KafeApi.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TableController : ControllerBase
+    public class TableController : BaseController
     {
       private readonly ITableServices _tableService;
 
@@ -20,15 +20,7 @@ namespace KafeApi.API.Controllers
         public async Task<IActionResult> GetTableList()
         {
             var result = await _tableService.GetTableList();
-            if (!result.Success)
-            {
-                if(result.ErrorCode == ErrorCodes.NotFound)
-                {
-                    return NotFound(result);
-                }
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return CreateResponse(result);
 
         }
 
@@ -36,30 +28,14 @@ namespace KafeApi.API.Controllers
         public async Task<IActionResult> GetTableById(int id)
         {
             var result = await _tableService.GetTableById(id);
-            if (!result.Success)
-            {
-                if (result.ErrorCode == ErrorCodes.NotFound)
-                {
-                    return NotFound(result);
-                }
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return CreateResponse(result);
         }
 
         [HttpGet("GetActiveTables")]
         public async Task<IActionResult> GetActiveTables()
         {
             var result = await _tableService.GetAllActiveTables();
-            if (!result.Success)
-            {
-                if (result.ErrorCode == ErrorCodes.NotFound)
-                {
-                    return NotFound(result);
-                }
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return CreateResponse(result);
         }
 
 
@@ -67,89 +43,41 @@ namespace KafeApi.API.Controllers
         public async Task<IActionResult> GetTableByNumber(int tableNumber)
         {
             var result = await _tableService.GetTableByNumber(tableNumber);
-            if (!result.Success)
-            {
-                if (result.ErrorCode == ErrorCodes.NotFound)
-                {
-                    return NotFound(result);
-                }
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return CreateResponse(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateTable([FromBody] CreateTableDto createTableDto)
         {
             var result = await _tableService.CreateTable(createTableDto);
-            if (!result.Success)
-            {
-                if (result.ErrorCode is ErrorCodes.ValidationError or ErrorCodes.DubplicateEntry)
-                {
-                    return NotFound(result);
-                }
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return CreateResponse(result);
         }
         [HttpPut]
         public async Task<IActionResult> UpdateTable([FromBody] UpdateTableDto updateTableDto)
         {
             var result = await _tableService.UpdateTable(updateTableDto);
-            if (!result.Success)
-            {
-                if (result.ErrorCode is ErrorCodes.ValidationError or ErrorCodes.NotFound)
-                {
-                    return NotFound(result);
-                }
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return CreateResponse(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTable(int id)
         {
             var result = await _tableService.DeleteTable(id);
-            if (!result.Success)
-            {
-                if (result.ErrorCode == ErrorCodes.NotFound)
-                {
-                    return NotFound(result);
-                }
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return CreateResponse(result);
         }
 
         [HttpPatch("UpdateTableStatusById/{id}")]
         public async Task<IActionResult> UpdateTableStatusById(int id)
         {
             var result = await _tableService.UpdateTableStatusById(id);
-            if (!result.Success)
-            {
-                if (result.ErrorCode == ErrorCodes.NotFound)
-                {
-                    return NotFound(result);
-                }
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return CreateResponse(result);
         }
 
         [HttpPatch("UpdateTableStatusByTableNumber/{tableNumber}")]
         public async Task<IActionResult> UpdateTableStatusByTableNumber(int tableNumber)
         {
             var result = await _tableService.UpdateTableStatusByTableNumber(tableNumber);
-            if (!result.Success)
-            {
-                if (result.ErrorCode == ErrorCodes.NotFound)
-                {
-                    return NotFound(result);
-                }
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return CreateResponse(result);
         }
     }
 }

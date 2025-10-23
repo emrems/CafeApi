@@ -40,6 +40,7 @@ namespace KafeApi.Application.Services.Concrete
                        
                     };
                 }
+               
                 var category = _mapper.Map<Category>(dto);
                 await _categoryRepository.AddAsync(category);
                 return new ResponseDto<object>

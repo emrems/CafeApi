@@ -7,7 +7,7 @@ namespace KafeApi.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MenuItemsController : ControllerBase
+    public class MenuItemsController : BaseController
     {
         private readonly IMenuItemServices _menuItemServices;
 
@@ -20,31 +20,14 @@ namespace KafeApi.API.Controllers
         {
            
             var menuItems = await _menuItemServices.GetAllMenuItems();
-            if (!menuItems.Success)
-            {
-                if (menuItems.ErrorCode == ErrorCodes.NotFound)
-                {
-                    return NotFound(menuItems);
-                }
-                return BadRequest(menuItems);
-               
-            }
-            return Ok(menuItems);
+            return CreateResponse(menuItems);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMenuItemById(int id)
         {
             var menuItem = await _menuItemServices.GetMenuItemById(id);
-            if (!menuItem.Success)
-            {
-                if (menuItem.ErrorCode == ErrorCodes.NotFound)
-                {
-                    return NotFound(menuItem);
-                }
-                return BadRequest(menuItem);
-            }
-            return Ok(menuItem);
+            return CreateResponse(menuItem);
 
         }
         [HttpPost]
@@ -52,45 +35,20 @@ namespace KafeApi.API.Controllers
         {
             
             var result = await _menuItemServices.AddMenuItem(dto);
-            if (!result.Success)
-            {
-                if(result.ErrorCode == ErrorCodes.ValidationError)
-                {
-                    return Ok(result);
-                }
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return CreateResponse(result);
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateMenuItem(UpdateMenuItemDto dto)
         {
            var result= await _menuItemServices.UpdateMenuItem(dto);
-            if (!result.Success)
-            {
-                if (result.ErrorCode == ErrorCodes.NotFound || result.ErrorCode == ErrorCodes.ValidationError)
-                {
-                    return Ok(result);
-                }
-                return BadRequest(result);
-            }
-            return Ok(result);
+            return CreateResponse(result);
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMenuItem(int id)
         {
             var result= await _menuItemServices.DeleteMenuItem(id);
-            if (!result.Success) 
-            {
-                if (result.ErrorCode == ErrorCodes.NotFound)
-                {
-                    return NotFound(result);
-                }
-                return BadRequest(result);
-
-            }
-            return Ok("menuItem başarıyla silindi");
+            return CreateResponse(result);
         }
     }
 }
