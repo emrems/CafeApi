@@ -32,6 +32,7 @@ internal class Program
         builder.Services.AddScoped<IMenuItemServices, MenuItemServices>();
         builder.Services.AddScoped<ITableRepository, TableRepository>();
         builder.Services.AddScoped<ITableServices, TableService>();
+        builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
         // AutoMapper konfigürasyonu
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

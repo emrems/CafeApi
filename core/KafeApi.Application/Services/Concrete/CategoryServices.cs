@@ -11,16 +11,18 @@ namespace KafeApi.Application.Services.Concrete
     public class CategoryServices : ICategoriyServices
     {
         private readonly IGenericRepository<Category> _categoryRepository;
+        private readonly ICategoryRepository _categoryCustomRepository;
         private readonly IMapper _mapper;
         private readonly IValidator<CreateCategoryDto> _createCategoryValidator;
         private readonly IValidator<UpdateCategoryDto> _updateCategoryValidator;
 
-        public CategoryServices(IGenericRepository<Category> categoryRepository, IMapper mapper, IValidator<CreateCategoryDto> createCategoryValidator = null, IValidator<UpdateCategoryDto> updateCategoryValidator = null)
+        public CategoryServices(IGenericRepository<Category> categoryRepository, IMapper mapper, IValidator<CreateCategoryDto> createCategoryValidator = null, IValidator<UpdateCategoryDto> updateCategoryValidator = null, ICategoryRepository categoryCustomRepository = null)
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
             _createCategoryValidator = createCategoryValidator;
             _updateCategoryValidator = updateCategoryValidator;
+            _categoryCustomRepository = categoryCustomRepository;
         }
 
         public async Task<ResponseDto<object>> AddCategory(CreateCategoryDto dto)
@@ -40,7 +42,17 @@ namespace KafeApi.Application.Services.Concrete
                        
                     };
                 }
-               
+                var checkCategory = await _categoryCustomRepository.getCategoriesByNameAsync(dto.Name);
+                if (checkCategory != null)
+                {
+                    return new ResponseDto<object>
+                    {
+                        Success = false,
+                        Data = null,
+                        Message = "Bu isimde bir kategori zaten mevcut",
+                        ErrorCode = ErrorCodes.DubplicateEntry
+                    };
+                }
                 var category = _mapper.Map<Category>(dto);
                 await _categoryRepository.AddAsync(category);
                 return new ResponseDto<object>
