@@ -10,8 +10,7 @@ namespace KafeApi.Application.Dtos.OrderDtos
 {
     public class CreateOrderDto
     {
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+       
         public string status { get; set; }
         public decimal TotalPrice { get; set; }
         public int TableId { get; set; }

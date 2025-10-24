@@ -47,7 +47,7 @@ namespace KafeApi.Application.Services.Concrete
                     
                 }
                 var checkCategory = await _categoryRepository.GetByIdAsync(dto.CategoryId);
-                if (checkCategory != null)
+                if (checkCategory == null)
                 {
                     return new ResponseDto<object>
                     {

@@ -11,6 +11,9 @@ using Scalar.AspNetCore;
 using FluentValidation;
 using KafeApi.Application.Dtos.CategoryDto;
 using KafeApi.Application.Dtos.MenuItemDto;
+using KafeApi.Application.Dtos.TableDtos;
+using KafeApi.Application.Dtos.OrderDtos;
+using KafeApi.Application.Dtos.OrderItemDtos;
 
 internal class Program
 {
@@ -34,6 +37,8 @@ internal class Program
         builder.Services.AddScoped<ITableServices, TableService>();
         builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
         builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+        builder.Services.AddScoped<IOrderService, OrderService>();
+        builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
         // AutoMapper konfigürasyonu
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -45,6 +50,14 @@ internal class Program
         builder.Services.AddValidatorsFromAssemblyContaining<CreateMenuItemDto>();
 
         builder.Services.AddValidatorsFromAssemblyContaining<UpdateMenuItemDto>();
+        builder.Services.AddValidatorsFromAssemblyContaining<CreateTableDto>();
+        builder.Services.AddValidatorsFromAssemblyContaining<UpdateTableDto>();
+
+        builder.Services.AddValidatorsFromAssemblyContaining<CreateOrderDto>();
+        builder.Services.AddValidatorsFromAssemblyContaining<UpdateOrderDto>();
+        builder.Services.AddValidatorsFromAssemblyContaining<UpdateOrderItemDto>();
+        builder.Services.AddValidatorsFromAssemblyContaining<UpdateOrderItemDto>();
+
 
         // OpenAPI servisini ekle
         builder.Services.AddOpenApi();

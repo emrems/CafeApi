@@ -16,14 +16,17 @@ namespace KafeApi.Application.Services.Concrete
     public class OrderService : IOrderService
     {
         private readonly IGenericRepository<Order> _orderRepository;
+        private readonly IOrderRepository _customOrderRepository;
         private readonly IMapper _mapper;
         private readonly IValidator<CreateOrderDto> _orderValidator;
 
-        public OrderService(IGenericRepository<Order> orderRepository, IMapper mapper, IValidator<CreateOrderDto> orderValidator = null)
+        public OrderService(IGenericRepository<Order> orderRepository, IMapper mapper, IValidator<CreateOrderDto> orderValidator = null, IOrderRepository customOrderRepository = null)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
             _orderValidator = orderValidator;
+            _customOrderRepository = customOrderRepository;
+           
         }
 
         public async Task<ResponseDto<object>> CreateOrder(CreateOrderDto createOrderDto)
@@ -109,7 +112,8 @@ namespace KafeApi.Application.Services.Concrete
         {
             try
             {
-                var order = await _orderRepository.GetByIdAsync(id);
+                var order = await _customOrderRepository.GetOrderWithDetail(id);
+               
                 if (order == null)
                 {
                     return new ResponseDto<DetailOrderDto>
@@ -148,8 +152,18 @@ namespace KafeApi.Application.Services.Concrete
         {
             try
             {
-                var orders = await _orderRepository.GetAllAsync();
+                var orders = await _customOrderRepository.GetAllOrderByOrderRepository();
                 var resultOrderDtos = _mapper.Map<List<ResultOrderDto>>(orders);
+                if(resultOrderDtos == null || resultOrderDtos.Count == 0)
+                {
+                    return new ResponseDto<List<ResultOrderDto>>
+                    {
+                        Success = false,
+                        Message = "Hiç sipariş bulunamadı",
+                        Data = null,
+                        ErrorCode = ErrorCodes.NotFound
+                    };
+                }
                 return new ResponseDto<List<ResultOrderDto>>
                 {
                     Success = true,

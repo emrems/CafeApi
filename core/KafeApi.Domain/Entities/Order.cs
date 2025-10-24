@@ -9,8 +9,8 @@ namespace KafeApi.Domain.Entities
     public class Order
     {
         public int Id { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } 
         public string status { get; set; }
         public decimal TotalPrice { get; set; }
         public int TableId { get; set; }
