@@ -30,6 +30,64 @@ namespace KafeApi.Application.Services.Concrete
             _menuItemRepository = menuItemRepository;
         }
 
+        //public async Task<ResponseDto<object>> AddOrderItemByOrderId(AddOrderItemByOrder dto)
+        //{
+        //    try
+        //    {
+        //        var order = await _orderRepository.GetByIdAsync(dto.OrderId);
+        //        if (order == null)
+        //        {
+        //            return new ResponseDto<object>
+        //            {
+        //                Success = false,
+        //                Message = "Sipariş bulunamadı",
+        //                Data = null,
+        //                ErrorCode = ErrorCodes.NotFound
+        //            };
+        //        }
+        //        var menuItem = await _menuItemRepository.GetByIdAsync(dto.CreateOrderItemDto.menuItemId);
+        //        if (menuItem == null)
+        //        {
+        //            return new ResponseDto<object>
+        //            {
+        //                Success = false,
+        //                Message = "Menü öğesi bulunamadı",
+        //                Data = null,
+        //                ErrorCode = ErrorCodes.NotFound
+        //            };
+        //        }
+        //        var orderItem = new OrderItem
+        //        {
+        //            menuItemId = dto.CreateOrderItemDto.menuItemId,
+        //            Quantity = dto.CreateOrderItemDto.Quantity,
+        //            Price = menuItem.Price * dto.CreateOrderItemDto.Quantity,
+        //            MenuItem = menuItem
+        //        };
+        //        order.OrderItems.Add(orderItem);
+        //        order.TotalPrice += orderItem.Price;
+        //        await _orderRepository.UpdateAsync(order);
+        //        return new ResponseDto<object>
+        //        {
+        //            Success = true,
+        //            Message = "Sipariş öğesi başarıyla eklendi",
+        //            Data = null,
+        //            ErrorCode = null
+        //        };
+
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        return new ResponseDto<object>
+        //        {
+        //            Success = false,
+        //            Message = "bir hata oldu",
+        //            Data = null,
+        //            ErrorCode = ErrorCodes.Exception
+        //        };
+        //    }
+        //}
+
         public async Task<ResponseDto<object>> CancelOrder(int id)
         {
             try
@@ -128,6 +186,10 @@ namespace KafeApi.Application.Services.Concrete
                 foreach (var item in order.OrderItems)
                 {
                     item.MenuItem = await _menuItemRepository.GetByIdAsync(item.menuItemId);
+                    if (item.MenuItem == null)
+                    {
+                        throw new Exception($"MenuItem with ID {item.menuItemId} not found.");
+                    }
                     item.Price = item.MenuItem.Price * item.Quantity;
                     totalPrice += item.Price;
 
@@ -276,11 +338,12 @@ namespace KafeApi.Application.Services.Concrete
             }
         }
 
-        public async Task<ResponseDto<object>> UpdateOrder( UpdateOrderDto updateOrderDto)
+        public async Task<ResponseDto<object>> UpdateOrder(UpdateOrderDto updateOrderDto)
         {
             try
             {
-                var order = await _orderRepository.GetByIdAsync(updateOrderDto.Id);
+                var order = await _customOrderRepository.GetOrderWithDetail(updateOrderDto.Id);
+
                 if (order == null)
                 {
                     return new ResponseDto<object>
@@ -291,28 +354,63 @@ namespace KafeApi.Application.Services.Concrete
                         ErrorCode = ErrorCodes.NotFound
                     };
                 }
-                _mapper.Map(updateOrderDto, order);
+
+                // Masa bilgisi değiştiyse güncelle
+                order.TableId = updateOrderDto.TableId;
+                order.UpdatedAt = DateTime.UtcNow;
+
+                // Tüm ürünleri kontrol et (hem var olan hem yeni eklenen)
+                foreach (var itemDto in updateOrderDto.OrderItems)
+                {
+                    var menuItem = await _menuItemRepository.GetByIdAsync(itemDto.menuItemId);
+                    if (menuItem == null)
+                        continue;
+
+                    // Mevcut item var mı kontrol et
+                    var existingItem = order.OrderItems.FirstOrDefault(x => x.menuItemId == itemDto.menuItemId);
+
+                    if (existingItem != null)
+                    {
+                        // Varsa sadece miktarı ve fiyatı güncelle
+                        existingItem.Quantity = itemDto.Quantity;
+                        existingItem.Price = menuItem.Price * itemDto.Quantity;
+                    }
+                    else
+                    {
+                        // Yoksa yeni bir ürün olarak ekle
+                        var newItem = new OrderItem
+                        {
+                            menuItemId = itemDto.menuItemId,
+                            Quantity = itemDto.Quantity,
+                            Price = menuItem.Price * itemDto.Quantity
+                        };
+                        order.OrderItems.Add(newItem);
+                    }
+                }
+
+                // Artık toplam tutarı yeniden hesapla
+                order.TotalPrice = order.OrderItems.Sum(x => x.Price);
+
                 await _orderRepository.UpdateAsync(order);
+
                 return new ResponseDto<object>
                 {
                     Success = true,
                     Message = "Sipariş başarıyla güncellendi",
-                    Data = null,
-                    ErrorCode = null
+                    Data = null
                 };
-
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
                 return new ResponseDto<object>
                 {
                     Success = false,
-                    Message = "bir hata oldu",
+                    Message = "Bir hata oluştu: " + ex.Message,
                     Data = null,
                     ErrorCode = ErrorCodes.Exception
                 };
             }
         }
+
     }
 }

@@ -61,5 +61,12 @@ namespace KafeApi.API.Controllers
             return CreateResponse(result);
         }
 
+        //[HttpPost("add-order-item")]
+        //public async Task<IActionResult> AddOrderItemByOrderId([FromBody] AddOrderItemByOrder dto)
+        //{
+        //    var result = await _orderService.AddOrderItemByOrderId(dto);
+        //    return CreateResponse(result);
+
+        //}
     }
 }
