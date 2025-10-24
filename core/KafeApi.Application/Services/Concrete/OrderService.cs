@@ -16,17 +16,96 @@ namespace KafeApi.Application.Services.Concrete
     public class OrderService : IOrderService
     {
         private readonly IGenericRepository<Order> _orderRepository;
+        private readonly IGenericRepository<MenuItem> _menuItemRepository;
         private readonly IOrderRepository _customOrderRepository;
         private readonly IMapper _mapper;
         private readonly IValidator<CreateOrderDto> _orderValidator;
 
-        public OrderService(IGenericRepository<Order> orderRepository, IMapper mapper, IValidator<CreateOrderDto> orderValidator = null, IOrderRepository customOrderRepository = null)
+        public OrderService(IGenericRepository<Order> orderRepository, IMapper mapper, IValidator<CreateOrderDto> orderValidator = null, IOrderRepository customOrderRepository = null, IGenericRepository<MenuItem> menuItemRepository = null)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
             _orderValidator = orderValidator;
             _customOrderRepository = customOrderRepository;
-           
+            _menuItemRepository = menuItemRepository;
+        }
+
+        public async Task<ResponseDto<object>> CancelOrder(int id)
+        {
+            try
+            {
+                var order = await _orderRepository.GetByIdAsync(id);
+                if (order == null)
+                {
+                    return new ResponseDto<object>
+                    {
+                        Success = false,
+                        Message = "Sipariş bulunamadı",
+                        Data = null,
+                        ErrorCode = ErrorCodes.NotFound
+                    };
+                }
+                order.status = OrderStatus.Cancelled.ToString();
+                await _orderRepository.UpdateAsync(order);
+                return new ResponseDto<object>
+                {
+                    Success = true,
+                    Message = "Sipariş durumu iptal edildi olarak  güncellendi",
+                    Data = null,
+                    ErrorCode = null
+                };
+
+            }
+            catch (Exception)
+            {
+
+                return new ResponseDto<object>
+                {
+                    Success = false,
+                    Message = "bir hata oldu",
+                    Data = null,
+                    ErrorCode = ErrorCodes.Exception
+                };
+            }
+        }
+
+        public async Task<ResponseDto<object>> CompleteOrder(int id)
+        {
+            try
+            {
+                var order = await _orderRepository.GetByIdAsync(id);
+                if (order == null)
+                {
+                    return new ResponseDto<object>
+                    {
+                        Success = false,
+                        Message = "Sipariş bulunamadı",
+                        Data = null,
+                        ErrorCode = ErrorCodes.NotFound
+                    };
+                }
+                order.status = OrderStatus.Completed.ToString();
+                await _orderRepository.UpdateAsync(order);
+                return new ResponseDto<object>
+                {
+                    Success = true,
+                    Message = "Sipariş durumu tamamlandı olarak güncellendi",
+                    Data = null,
+                    ErrorCode = null
+                };
+
+            }
+            catch (Exception)
+            {
+
+                return new ResponseDto<object>
+                {
+                    Success = false,
+                    Message = "bir hata oldu",
+                    Data = null,
+                    ErrorCode = ErrorCodes.Exception
+                };
+            }
         }
 
         public async Task<ResponseDto<object>> CreateOrder(CreateOrderDto createOrderDto)
@@ -45,6 +124,17 @@ namespace KafeApi.Application.Services.Concrete
                     };
                 }
                 var order = _mapper.Map<Order>(createOrderDto);
+                decimal totalPrice = 0;
+                foreach (var item in order.OrderItems)
+                {
+                    item.MenuItem = await _menuItemRepository.GetByIdAsync(item.menuItemId);
+                    item.Price = item.MenuItem.Price * item.Quantity;
+                    totalPrice += item.Price;
+
+
+                }
+                order.TotalPrice = totalPrice;
+                order.status = OrderStatus.Pending.ToString();
                 await _orderRepository.AddAsync(order);
                 return new ResponseDto<object>
                 {

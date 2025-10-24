@@ -11,8 +11,8 @@ namespace KafeApi.Application.Dtos.OrderDtos
     public class CreateOrderDto
     {
        
-        public string status { get; set; }
-        public decimal TotalPrice { get; set; }
+        //public string status { get; set; }
+        //public decimal TotalPrice { get; set; }
         public int TableId { get; set; }
         public List<CreateOrderItemDto> OrderItems { get; set; }
     }

@@ -15,5 +15,8 @@ namespace KafeApi.Application.Services.Abstract
         Task<ResponseDto<object>> CreateOrder(CreateOrderDto createOrderDto);
         Task<ResponseDto<object>> UpdateOrder(UpdateOrderDto updateOrderDto);
         Task<ResponseDto<object>> DeleteOrder(int id);
+        Task<ResponseDto<object>> CompleteOrder(int id);
+        Task<ResponseDto<object>> CancelOrder(int id);
+
     }
 }

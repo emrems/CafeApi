@@ -10,11 +10,11 @@ namespace KafeApi.Application.Validators.Order
 {
     public class AddOrderValidator : AbstractValidator<CreateOrderDto>
     {
-        public AddOrderValidator()
-        {
-            RuleFor(x => x.TotalPrice)
-            .GreaterThan(0).WithMessage("TotalPrice 0 dan büyük olmalı");
+        //public AddOrderValidator()
+        //{
+        //    RuleFor(x => x.TotalPrice)
+        //    .GreaterThan(0).WithMessage("TotalPrice 0 dan büyük olmalı");
             
-        }
+        //}
     }
 }

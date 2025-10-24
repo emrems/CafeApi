@@ -48,5 +48,18 @@ namespace KafeApi.API.Controllers
             return CreateResponse(result);
         }
 
+        [HttpPut("complete/{id}")]
+        public async Task<IActionResult> CompleteOrder(int id)
+        {
+            var result = await _orderService.CompleteOrder(id);
+            return CreateResponse(result);
+        }
+        [HttpPut("cancel/{id}")]
+        public async Task<IActionResult> CancelOrder(int id)
+        {
+            var result = await _orderService.CancelOrder(id);
+            return CreateResponse(result);
+        }
+
     }
 }
