@@ -63,6 +63,7 @@ internal class Program
         builder.Services.AddOpenApi();
 
         var app = builder.Build();
+       
 
         // HTTP istek hattını yapılandır (Configure the HTTP request pipeline)
         // Her şey app.Build() sonrasında burada olmalı

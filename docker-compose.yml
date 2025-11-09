@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: kafe-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password123!
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+
+  webapi:
+    build: .
+    container_name: kafe-webapi
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://*:8080
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=KafeApiDb;User Id=sa;Password=Password123!;TrustServerCertificate=True;Encrypt=False;
+      - Scalar__Server__0__Url=http://localhost:5000
+      - Scalar__Server__0__PublicUrl=http://localhost:5000
+    depends_on:
+      - sqlserver
+
+volumes:
+  sqlserver-data:

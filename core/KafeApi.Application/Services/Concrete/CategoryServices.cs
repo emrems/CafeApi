@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using KafeApi.Application.Dtos.CategoryDto;
+using KafeApi.Application.Dtos.MenuItemDto;
 using KafeApi.Application.Dtos.ResponseDtos;
 using KafeApi.Application.Interfaces;
 using KafeApi.Application.Services.Abstract;
@@ -131,6 +132,7 @@ namespace KafeApi.Application.Services.Concrete
                 }
                 // category mapplenecek
                 var ResultCategoryDtos = _mapper.Map<List<ResultCategoryDto>>(categories);
+                
                 return new ResponseDto<List<ResultCategoryDto>> { Data = ResultCategoryDtos, Success = true };
 
 
@@ -147,14 +149,47 @@ namespace KafeApi.Application.Services.Concrete
 
             }
         }
-        public async Task<ResponseDto<DetailCategoryDto>> GetCategoryById(int id)
+
+        public async Task<ResponseDto<List<ResultCategoriesWithMenuDto>>> GetAllCategoriesWithMenuItems()
+        {
+
+            try
+            {
+                var categories = await _categoryCustomRepository.getCategoriesDetails();
+                if (categories.Count == 0)
+                {
+                    return new ResponseDto<List<ResultCategoriesWithMenuDto>>()
+                    {
+                        Data = null,
+                        Success = false,
+                        Message = "Kategori bulunamadı",
+                        ErrorCode = ErrorCodes.NotFound
+                    };
+                }
+                // category mapplenecek
+                var ResultCategoryDtos = _mapper.Map<List<ResultCategoriesWithMenuDto>>(categories);
+                return new ResponseDto<List<ResultCategoriesWithMenuDto>> { Data = ResultCategoryDtos, Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDto<List<ResultCategoriesWithMenuDto>>()
+                {
+                    Success = false,
+                    Message = "bir hata oluştu",
+                    ErrorCode = ErrorCodes.Exception,
+                    Data = null
+                };
+            }
+        }
+
+        public async Task<ResponseDto<CategoriesMenUItemDto>> GetCategoryById(int id)
         {
             try
             {
-                var category = await _categoryRepository.GetByIdAsync(id);
+                var category = await _categoryCustomRepository.getCategoryByIdAsync(id);
                 if (category == null)
                 {
-                    return new ResponseDto<DetailCategoryDto>
+                    return new ResponseDto<CategoriesMenUItemDto>
                     {
                         Success = false,
                         Message = $"{id} li category bulunamadı",
@@ -163,8 +198,8 @@ namespace KafeApi.Application.Services.Concrete
                     };
                 }
                 // category mapplenecek  
-                var detailCategoryDto = _mapper.Map<DetailCategoryDto>(category);
-                return new ResponseDto<DetailCategoryDto>
+                var detailCategoryDto = _mapper.Map<CategoriesMenUItemDto>(category);
+                return new ResponseDto<CategoriesMenUItemDto>
                 {
                     Success = true,
                     Data = detailCategoryDto
@@ -172,7 +207,7 @@ namespace KafeApi.Application.Services.Concrete
             }
             catch (Exception ex)
             {
-                return new ResponseDto<DetailCategoryDto>
+                return new ResponseDto<CategoriesMenUItemDto>
                 {
                     Success = false,
                     Message = "bir hata oluştu",

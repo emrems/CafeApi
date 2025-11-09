@@ -18,16 +18,18 @@ namespace KafeApi.Application.Services.Concrete
         private readonly IGenericRepository<Order> _orderRepository;
         private readonly IGenericRepository<MenuItem> _menuItemRepository;
         private readonly IOrderRepository _customOrderRepository;
+        private readonly IGenericRepository<Table> _tableRepository;
         private readonly IMapper _mapper;
         private readonly IValidator<CreateOrderDto> _orderValidator;
 
-        public OrderService(IGenericRepository<Order> orderRepository, IMapper mapper, IValidator<CreateOrderDto> orderValidator = null, IOrderRepository customOrderRepository = null, IGenericRepository<MenuItem> menuItemRepository = null)
+        public OrderService(IGenericRepository<Order> orderRepository, IMapper mapper, IValidator<CreateOrderDto> orderValidator = null, IOrderRepository customOrderRepository = null, IGenericRepository<MenuItem> menuItemRepository = null, IGenericRepository<Table> tableRepository = null)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
             _orderValidator = orderValidator;
             _customOrderRepository = customOrderRepository;
             _menuItemRepository = menuItemRepository;
+            _tableRepository = tableRepository;
         }
 
         //public async Task<ResponseDto<object>> AddOrderItemByOrderId(AddOrderItemByOrder dto)
@@ -198,6 +200,10 @@ namespace KafeApi.Application.Services.Concrete
                 order.TotalPrice = totalPrice;
                 order.status = OrderStatus.Pending.ToString();
                 await _orderRepository.AddAsync(order);
+                var table = await _tableRepository.GetByIdAsync(createOrderDto.TableId);
+                table.IsActive =false;
+                await _tableRepository.UpdateAsync(table);
+
                 return new ResponseDto<object>
                 {
                     Success = true,

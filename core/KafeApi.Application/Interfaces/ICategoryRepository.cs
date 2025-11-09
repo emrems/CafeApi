@@ -10,5 +10,7 @@ namespace KafeApi.Application.Interfaces
     public interface ICategoryRepository
     {
         Task<Category> getCategoriesByNameAsync(string name);
+        Task<List<Category>> getCategoriesDetails();
+        Task<Category> getCategoryByIdAsync(int id);
     }
 }

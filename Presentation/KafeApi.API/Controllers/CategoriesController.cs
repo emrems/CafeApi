@@ -23,6 +23,14 @@ namespace KafeApi.API.Controllers
             return CreateResponse(categories);
         }
 
+        [HttpGet("getCategoriesWithMenuItem")]
+        public async Task<IActionResult> GetCategoriesWithMenuItem()
+        {
+            var categories = await _categoryServices.GetAllCategoriesWithMenuItems();
+            return CreateResponse(categories);
+        }
+
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCategoryById(int id)
         {

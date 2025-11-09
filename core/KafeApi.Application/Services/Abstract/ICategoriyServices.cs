@@ -1,4 +1,5 @@
 ﻿using KafeApi.Application.Dtos.CategoryDto;
+using KafeApi.Application.Dtos.MenuItemDto;
 using KafeApi.Application.Dtos.ResponseDtos;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,8 @@ namespace KafeApi.Application.Services.Abstract
     public interface ICategoriyServices
     {
         Task<ResponseDto<List<ResultCategoryDto>>> GetAllCategories();
-        Task<ResponseDto<DetailCategoryDto>> GetCategoryById(int id);
+        Task<ResponseDto<List<ResultCategoriesWithMenuDto>>> GetAllCategoriesWithMenuItems();
+        Task<ResponseDto<CategoriesMenUItemDto>> GetCategoryById(int id);
         Task<ResponseDto<object>> AddCategory(CreateCategoryDto dto);
         Task<ResponseDto<object>> UpdateCategory(UpdateCategoryDto dto);
         Task<ResponseDto<object>> DeleteCategory(int id);

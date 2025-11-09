@@ -24,5 +24,21 @@ namespace KafeApi.Persistance.Repository
             var category = await _context.Categories.FirstOrDefaultAsync(x => x.Name == name);
             return category;
         }
+
+        public async Task<List<Category>> getCategoriesDetails()
+        {
+            var categories = await _context.Categories
+                .Include(x=> x.MenuItems)
+                .ToListAsync();
+            return categories;
+        }
+
+        public async Task<Category> getCategoryByIdAsync(int id)
+        {
+            var category = await _context.Categories
+                .Include(x => x.MenuItems)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            return category;
+        }
     }
 }
