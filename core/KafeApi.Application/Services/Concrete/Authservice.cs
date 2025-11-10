@@ -1,4 +1,5 @@
-﻿using KafeApi.Application.Dtos.ResponseDtos;
+﻿using KafeApi.Application.Dtos.AuthDto;
+using KafeApi.Application.Dtos.ResponseDtos;
 using KafeApi.Application.Helpers;
 using KafeApi.Application.Services.Abstract;
 using System;
@@ -11,18 +12,30 @@ namespace KafeApi.Application.Services.Concrete
 {
     public class Authservice : IAuthService
     {
-        TokenHelpers _helpers;
+        private  readonly TokenHelpers _helpers;
+
 
         public Authservice(TokenHelpers helpers)
         {
             _helpers = helpers;
         }
 
-        public async Task<ResponseDto<object>> GenerateTokenAsync(string email)
+        public async Task<ResponseDto<object>> GenerateTokenAsync(TokenDto dto)
         {
             try
             {
-                var token = _helpers.GenerateToken(email);
+                var user = dto.Email == "admin@admin.com" ? true : false;
+                if (!user)
+                {
+                    return new ResponseDto<object>
+                    {
+                        Data = null,
+                        Success = false,
+                        Message = "kullanıcı bulunamadı",
+                        ErrorCode = ErrorCodes.NotFound
+                    };
+                }
+                var token = _helpers.GenerateToken(dto);
                 if (token == null)
                 {
                     return new ResponseDto<object>

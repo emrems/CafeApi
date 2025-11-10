@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using KafeApi.Application.Dtos.AuthDto;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -20,15 +21,16 @@ namespace KafeApi.Application.Helpers
             _configuration = configuration;
         }
 
-        public  string GenerateToken(string email)
+        public  string GenerateToken(TokenDto dto)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creadentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             // kullanıcı bilgileri al
             var claim = new List<Claim>
             {
-                new Claim("email",email),
-                new Claim("role","Admin"),
+                new Claim("_u",dto.Id.ToString()),
+                new Claim("_e",dto.Email),
+                new Claim("_r",dto.Role),
                 new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 
             };

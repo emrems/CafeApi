@@ -1,4 +1,5 @@
-﻿using KafeApi.Application.Services.Abstract;
+﻿using KafeApi.Application.Dtos.AuthDto;
+using KafeApi.Application.Services.Abstract;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +17,9 @@ namespace KafeApi.API.Controllers
         }
 
         [HttpPost("generate-token")] 
-        public async Task<IActionResult> GenerateToken(string email)
+        public async Task<IActionResult> GenerateToken(TokenDto dto)
         {
-            var token = await _authService.GenerateTokenAsync(email);
+            var token = await _authService.GenerateTokenAsync(dto);
             return CreateResponse(token);
         }
     }
