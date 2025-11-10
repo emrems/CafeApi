@@ -15,6 +15,9 @@ using KafeApi.Application.Dtos.TableDtos;
 using KafeApi.Application.Dtos.OrderDtos;
 using KafeApi.Application.Dtos.OrderItemDtos;
 using KafeApi.Application.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 internal class Program
 {
@@ -66,6 +69,29 @@ internal class Program
         // OpenAPI servisini ekle
         builder.Services.AddOpenApi();
 
+        // jwt yapılandırması
+        builder.Services.AddAuthentication(opt =>
+        {
+            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(o =>
+        {
+            o.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+
+            };
+        });
+
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddHttpContextAccessor();
+
         var app = builder.Build();
        
 
@@ -89,6 +115,7 @@ internal class Program
 
 
         app.UseHttpsRedirection();
+        app.UseAuthentication();
 
         app.UseAuthorization();
 

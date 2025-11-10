@@ -1,6 +1,7 @@
 ﻿using KafeApi.Application.Dtos.CategoryDto;
 using KafeApi.Application.Dtos.ResponseDtos;
 using KafeApi.Application.Services.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KafeApi.API.Controllers
@@ -38,6 +39,7 @@ namespace KafeApi.API.Controllers
             return CreateResponse(categories);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddCategory([FromBody] CreateCategoryDto dto)
         {
