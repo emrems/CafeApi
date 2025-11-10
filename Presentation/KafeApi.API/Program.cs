@@ -18,6 +18,8 @@ using KafeApi.Application.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using KafeApi.Persistance.Context.Identity;
+using Microsoft.AspNetCore.Identity;
 
 internal class Program
 {
@@ -29,6 +31,19 @@ internal class Program
 
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        builder.Services.AddDbContext<AppIdentityAppDbContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        builder.Services.AddIdentity<AppIdentityUser, AppIdentityRole>(opt =>
+        {
+            opt.User.RequireUniqueEmail = true;
+            opt.Password.RequireDigit = true;
+            opt.Password.RequiredLength = 6;
+            opt.Password.RequireNonAlphanumeric = false;
+            opt.Password.RequireUppercase = true;
+            opt.Password.RequireLowercase = false;
+        }).AddEntityFrameworkStores<AppIdentityAppDbContext>().AddDefaultTokenProviders();
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
