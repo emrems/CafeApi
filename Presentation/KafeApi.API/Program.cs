@@ -32,9 +32,10 @@ internal class Program
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+        // Identity DbContext ekle
         builder.Services.AddDbContext<AppIdentityAppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+        // Identity yapılandırması
         builder.Services.AddIdentity<AppIdentityUser, AppIdentityRole>(opt =>
         {
             opt.User.RequireUniqueEmail = true;
