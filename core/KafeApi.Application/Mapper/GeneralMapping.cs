@@ -44,9 +44,9 @@ namespace KafeApi.Application.Mapper
             CreateMap<ResultOrderDto, Order>().ReverseMap();
             CreateMap<UpdateOrderDto, Order>().ReverseMap();
           //  CreateMap<MenuItem, ResultMenuItemDtoWithoutCategory>();
-            CreateMap<Category, ResultCategoryDto>()
-                .ForMember(dest => dest.MenuItems, opt => opt.MapFrom(src => src.MenuItems));
-
+            //CreateMap<Category, ResultCategoryDto>()
+            //    .ForMember(dest => dest.MenuItems, opt => opt.MapFrom(src => src.MenuItems));
+          
 
         }
     }

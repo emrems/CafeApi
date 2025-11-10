@@ -34,5 +34,21 @@ namespace KafeApi.Persistance.Repository
         {
             await _signInManager.SignOutAsync();    
         }
+
+        public async Task<IdentityResult> RegisterAsync(RegisterDto dto)
+        {
+            var user = new AppIdentityUser
+            {
+                UserName = dto.Email,
+                Email = dto.Email,
+                Name = dto.Name,
+                Surname = dto.Surname,
+                PhoneNumber = dto.Phone
+            };
+
+            var result = await _userManager.CreateAsync(user, dto.Password);
+            return result;
+
+        }
     }
 }

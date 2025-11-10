@@ -12,5 +12,6 @@ namespace KafeApi.Application.Interfaces
     {
         Task<SignInResult> LoginAsync(LoginDto dto);
         Task LogoutAsync();
+        Task<IdentityResult> RegisterAsync(RegisterDto dto);
     }
 }
