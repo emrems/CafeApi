@@ -39,6 +39,7 @@ internal class Program
         builder.Services.AddScoped<IOrderItemService, OrderItemService>();
         builder.Services.AddScoped<IOrderService, OrderService>();
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+        builder.Services.AddScoped<IMenuItemRepository, MenuItemRepository>();
 
         // AutoMapper konfigürasyonu
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -73,14 +74,16 @@ internal class Program
             app.MapOpenApi();
         }
 
-        app.MapScalarApiReference(
-            opt =>
-            {
-                opt.Title = "KafeApi API Reference";
-                opt.DefaultHttpClient = new(ScalarTarget.Http, ScalarClient.Http11);
-                opt.Theme = ScalarTheme.BluePlanet;
-            }
-        );
+        app.MapScalarApiReference(opt =>
+        {
+            opt.Title = "KafeApi API Reference";
+            opt.DefaultHttpClient = new(ScalarTarget.Http, ScalarClient.Http11);
+            opt.Theme = ScalarTheme.BluePlanet;
+
+            // 👇 Bu satırı ekle
+           // opt.Servers = new[] { new ScalarServer("http://localhost:5000") };
+        });
+
 
         app.UseHttpsRedirection();
 

@@ -16,18 +16,20 @@ namespace KafeApi.Application.Services.Concrete
     public class MenuItemServices : IMenuItemServices
     {
         private readonly IGenericRepository<MenuItem> _menuItemRepository;
+        private readonly IMenuItemRepository _menuItemCustomRepository;
         private readonly IMapper _mapper;
         private readonly IGenericRepository<Category> _categoryRepository;
         private readonly IValidator<CreateMenuItemDto> _addMenuItemValidator;
         private readonly IValidator<UpdateMenuItemDto> _updateMenuItemValidator;
 
-        public MenuItemServices(IGenericRepository<MenuItem> menuItemRepository, IMapper mapper = null, IValidator<CreateMenuItemDto> addMenuItemValidator = null, IValidator<UpdateMenuItemDto> updateMenuItemValidator = null, IGenericRepository<Category> categoryRepository = null)
+        public MenuItemServices(IGenericRepository<MenuItem> menuItemRepository, IMapper mapper = null, IValidator<CreateMenuItemDto> addMenuItemValidator = null, IValidator<UpdateMenuItemDto> updateMenuItemValidator = null, IGenericRepository<Category> categoryRepository = null, IMenuItemRepository menuItemCustomRepository = null)
         {
             _menuItemRepository = menuItemRepository;
             _mapper = mapper;
             _addMenuItemValidator = addMenuItemValidator;
             _updateMenuItemValidator = updateMenuItemValidator;
             _categoryRepository = categoryRepository;
+            _menuItemCustomRepository = menuItemCustomRepository;
         }
 
         public async Task<ResponseDto<object>> AddMenuItem(CreateMenuItemDto dto)
@@ -121,9 +123,10 @@ namespace KafeApi.Application.Services.Concrete
         {
             try
             {
-                var menuItems = await _menuItemRepository.GetAllAsync();
-                var categories = await _categoryRepository.GetAllAsync();
-                if (menuItems == null || !menuItems.Any())
+                //var menuItems = await _menuItemRepository.GetAllAsync();
+                //var categories = await _categoryRepository.GetAllAsync();
+                var menuItems = await _menuItemCustomRepository.GetAllMenuItemWithCategoriesAsync();
+                if (menuItems == null )
                 {
                     return new ResponseDto<List<ResultMenuItemDto>>
                     {
@@ -162,7 +165,7 @@ namespace KafeApi.Application.Services.Concrete
             try
             {
                 var menuItem = await _menuItemRepository.GetByIdAsync(id);
-                var categories = await _categoryRepository.GetByIdAsync(menuItem.CategoryId);
+               
                 if (menuItem == null)
                 {
                     return new ResponseDto<DetailMenuItemDto>
@@ -173,6 +176,7 @@ namespace KafeApi.Application.Services.Concrete
                         Data = null
                     };
                 }
+                var categories = await _categoryRepository.GetByIdAsync(menuItem.CategoryId);
                 // Map MenuItem to DetailMenuItemDto
                 var menuItemDto = _mapper.Map<DetailMenuItemDto>(menuItem);
                 return new ResponseDto<DetailMenuItemDto>

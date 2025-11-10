@@ -68,5 +68,12 @@ namespace KafeApi.API.Controllers
         //    return CreateResponse(result);
 
         //}
+
+        [HttpPut("paid")]
+        public async Task<IActionResult> MarkOrderAsPaid(int id)
+        {
+            var result = await _orderService.UpdateOrderStatusPaid(id);
+            return CreateResponse(result);
+        }
     }
 }

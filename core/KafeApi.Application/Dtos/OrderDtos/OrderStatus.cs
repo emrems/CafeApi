@@ -12,5 +12,6 @@ namespace KafeApi.Application.Dtos.OrderDtos
         public const string InProgress = "Devam ediyor";
         public const string Completed = "Tamamlandı";
         public const string Cancelled = "İptal edildi";
+        public const string Paid = "Ödendi";
     }
 }

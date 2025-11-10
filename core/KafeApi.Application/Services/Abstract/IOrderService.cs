@@ -19,6 +19,7 @@ namespace KafeApi.Application.Services.Abstract
         Task<ResponseDto<object>> CancelOrder(int id);
 
         //Task<ResponseDto<object>> AddOrderItemByOrderId(AddOrderItemByOrder dto);
+        Task<ResponseDto<object>> UpdateOrderStatusPaid(int id);
 
     }
 }

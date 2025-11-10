@@ -418,5 +418,48 @@ namespace KafeApi.Application.Services.Concrete
             }
         }
 
+        public async Task<ResponseDto<object>> UpdateOrderStatusPaid(int id)
+        {
+            try
+            {
+                var order = await _orderRepository.GetByIdAsync(id);
+                if (order == null)
+                {
+                    return new ResponseDto<object>
+                    {
+                        Success = false,
+                        Message = "Sipariş bulunamadı",
+                        Data = null,
+                        ErrorCode = ErrorCodes.NotFound
+                    };
+                }
+                order.status = OrderStatus.Paid.ToString();
+                await _orderRepository.UpdateAsync(order);
+                var table = await _tableRepository.GetByIdAsync(order.TableId);
+                table.IsActive = true;
+                await _tableRepository.UpdateAsync(table);
+                return new ResponseDto<object>
+                {
+                    Success = true,
+                    Message = "Sipariş durumu ödendi olarak güncellendi",
+                    Data = null,
+                    ErrorCode = null
+                };
+
+            }
+            catch (Exception)
+            {
+
+                return new ResponseDto<object>
+                {
+                    Success = false,
+                    Message = "bir hata oldu",
+                    Data = null,
+                    ErrorCode = ErrorCodes.Exception
+                };
+            }
+        }
+
+
     }
 }
