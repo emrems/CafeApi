@@ -14,6 +14,7 @@ using KafeApi.Application.Dtos.MenuItemDto;
 using KafeApi.Application.Dtos.TableDtos;
 using KafeApi.Application.Dtos.OrderDtos;
 using KafeApi.Application.Dtos.OrderItemDtos;
+using KafeApi.Application.Helpers;
 
 internal class Program
 {
@@ -40,6 +41,8 @@ internal class Program
         builder.Services.AddScoped<IOrderService, OrderService>();
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();
         builder.Services.AddScoped<IMenuItemRepository, MenuItemRepository>();
+        builder.Services.AddScoped<IAuthService, Authservice>();
+        builder.Services.AddScoped<TokenHelpers>();
 
         // AutoMapper konfigürasyonu
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
