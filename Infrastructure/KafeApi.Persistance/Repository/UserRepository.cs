@@ -1,4 +1,5 @@
-﻿using KafeApi.Application.Dtos.UserDto;
+﻿using KafeApi.Application.Dtos.AuthDto;
+using KafeApi.Application.Dtos.UserDto;
 using KafeApi.Application.Interfaces;
 using KafeApi.Persistance.Context.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +20,30 @@ namespace KafeApi.Persistance.Repository
         {
             _userManager = userManager;
             _signInManager = signInManager;
+        }
+
+        public async Task<userDto> CheckUserAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return new userDto(); 
+            }
+            return new userDto
+            {
+                Id = user.Id,
+                Email = user.Email
+            };
+        }
+
+        public async Task<SignInResult> CheckUserWithPasswordAsync(LoginDto dto)
+        {
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null)
+                return SignInResult.Failed;
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
+            return result;
         }
 
         public async  Task<SignInResult> LoginAsync(LoginDto dto)

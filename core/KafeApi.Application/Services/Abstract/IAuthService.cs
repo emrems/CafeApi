@@ -1,5 +1,6 @@
 ﻿using KafeApi.Application.Dtos.AuthDto;
 using KafeApi.Application.Dtos.ResponseDtos;
+using KafeApi.Application.Dtos.UserDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace KafeApi.Application.Services.Abstract
 {
     public interface IAuthService
     {
-        Task<ResponseDto<object>> GenerateTokenAsync(TokenDto dto);
+        Task<ResponseDto<object>> GenerateTokenAsync(LoginDto dto);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using KafeApi.Application.Dtos.AuthDto;
 using KafeApi.Application.Dtos.ResponseDtos;
+using KafeApi.Application.Dtos.UserDto;
 using KafeApi.Application.Helpers;
+using KafeApi.Application.Interfaces;
 using KafeApi.Application.Services.Abstract;
 using System;
 using System.Collections.Generic;
@@ -13,29 +15,38 @@ namespace KafeApi.Application.Services.Concrete
     public class Authservice : IAuthService
     {
         private  readonly TokenHelpers _helpers;
+        private readonly IUserRepository _userRepository;
 
-
-        public Authservice(TokenHelpers helpers)
+        public Authservice(TokenHelpers helpers, IUserRepository userRepository = null)
         {
             _helpers = helpers;
+            _userRepository = userRepository;
         }
 
-        public async Task<ResponseDto<object>> GenerateTokenAsync(TokenDto dto)
-        {
+        public async Task<ResponseDto<object>> GenerateTokenAsync(LoginDto dto)
+         {
             try
             {
-                var user = dto.Email == "admin@admin.com" ? true : false;
-                if (!user)
+                var user = await _userRepository.CheckUserAsync(dto.Email);
+                var signInResult = await _userRepository.CheckUserWithPasswordAsync(dto);
+                if (user == null || !signInResult.Succeeded)
                 {
                     return new ResponseDto<object>
                     {
                         Data = null,
                         Success = false,
                         Message = "kullanıcı bulunamadı",
-                        ErrorCode = ErrorCodes.NotFound
+                        ErrorCode = ErrorCodes.Unauthorized
                     };
                 }
-                var token = _helpers.GenerateToken(dto);
+                var tokenDto = new TokenDto
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Role = "Admin"
+                };
+
+                var token = _helpers.GenerateToken(tokenDto);
                 if (token == null)
                 {
                     return new ResponseDto<object>
@@ -53,6 +64,7 @@ namespace KafeApi.Application.Services.Concrete
                     Message = "token oluşturuldu",
                     ErrorCode = null
                 };
+
             }
             catch (Exception)
             {
