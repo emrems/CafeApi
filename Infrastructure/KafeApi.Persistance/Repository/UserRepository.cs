@@ -15,11 +15,24 @@ namespace KafeApi.Persistance.Repository
     {
         private readonly UserManager<AppIdentityUser> _userManager;
         private readonly SignInManager<AppIdentityUser> _signInManager;
+        private readonly RoleManager<AppIdentityRole> _roleManager;
 
-        public UserRepository(UserManager<AppIdentityUser> userManager, SignInManager<AppIdentityUser> signInManager)
+        public UserRepository(UserManager<AppIdentityUser> userManager, SignInManager<AppIdentityUser> signInManager, RoleManager<AppIdentityRole> roleManager = null)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
+        }
+
+        public async Task<bool> AddRoleToUserAsync(string email, string roleName)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return false;
+            var result = await _userManager.AddToRoleAsync(user, roleName);
+            if (result.Succeeded)
+                return true;
+            return false;
         }
 
         public async Task<userDto> CheckUserAsync(string email)
@@ -29,10 +42,12 @@ namespace KafeApi.Persistance.Repository
             {
                 return new userDto(); 
             }
+            var userRole = await _userManager.GetRolesAsync(user);
             return new userDto
             {
                 Id = user.Id,
-                Email = user.Email
+                Email = user.Email,
+                Role = userRole.FirstOrDefault()
             };
         }
 
@@ -44,6 +59,21 @@ namespace KafeApi.Persistance.Repository
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, dto.Password, false);
             return result;
+        }
+
+        public async Task<bool> CreateRoleAsync(string roleName)
+        {
+            if(string.IsNullOrEmpty(roleName))
+                return false;
+            var roleExist = await _roleManager.RoleExistsAsync(roleName);
+            if (!roleExist)
+            {
+                var result = await _roleManager.CreateAsync(new AppIdentityRole { Name =roleName });
+                if (result.Succeeded)
+                    return true;
+                return false;
+            }
+            return false;
         }
 
         public async  Task<SignInResult> LoginAsync(LoginDto dto)

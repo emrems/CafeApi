@@ -49,6 +49,11 @@ internal class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
 
+        //builder.Services.AddIdentity<AppIdentityUser, IdentityRole>()
+        //.AddEntityFrameworkStores<AppDbContext>()
+        //.AddDefaultTokenProviders();
+
+
         // Servis kaydı
         builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         builder.Services.AddScoped<ICategoriyServices, CategoryServices>();

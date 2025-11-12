@@ -43,7 +43,7 @@ namespace KafeApi.Application.Services.Concrete
                 {
                     Id = user.Id,
                     Email = user.Email,
-                    Role = "Admin"
+                    Role = user.Role
                 };
 
                 var token = _helpers.GenerateToken(tokenDto);
