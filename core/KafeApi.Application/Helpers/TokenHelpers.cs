@@ -30,7 +30,7 @@ namespace KafeApi.Application.Helpers
             {
                 new Claim("_u",dto.Id.ToString()),
                 new Claim("_e",dto.Email),
-                new Claim("_r",dto.Role),
+                new Claim("role",dto.Role),
                 new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 
             };
