@@ -3,3 +3,22 @@
 2025-11-13 13:09:44.676 +03:00 [WRN] No store type was specified for the decimal property 'TotalPrice' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
 2025-11-13 13:09:44.685 +03:00 [WRN] No store type was specified for the decimal property 'Price' on entity type 'OrderItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
 2025-11-13 13:09:45.041 +03:00 [INF] GetAllCategories endpoint finished.KafeApi.Application.Dtos.ResponseDtos.ResponseDto`1[System.Collections.Generic.List`1[KafeApi.Application.Dtos.CategoryDto.ResultCategoryDto]]
+2025-11-13 13:41:42.771 +03:00 [INF] Incoming Request: GET /scalar/v1 from ::1
+2025-11-13 13:41:42.928 +03:00 [INF] Outgoing Response:  responded 200 in 158ms
+2025-11-13 13:41:42.937 +03:00 [INF] Incoming Request: GET /scalar/scalar.aspnetcore.js from ::1
+2025-11-13 13:41:42.937 +03:00 [INF] Incoming Request: GET /scalar/scalar.js from ::1
+2025-11-13 13:41:43.070 +03:00 [INF] Outgoing Response:  responded 304 in 132ms
+2025-11-13 13:41:43.070 +03:00 [INF] Outgoing Response:  responded 304 in 132ms
+2025-11-13 13:41:45.406 +03:00 [INF] Incoming Request: GET /openapi/v1.json from ::1
+2025-11-13 13:41:45.511 +03:00 [INF] Incoming Request: GET /openapi/v1.json from ::1
+2025-11-13 13:41:45.511 +03:00 [INF] Outgoing Response:  responded 200 in 105ms
+2025-11-13 13:41:45.525 +03:00 [INF] Outgoing Response:  responded 200 in 14ms
+2025-11-13 13:41:46.025 +03:00 [INF] Incoming Request: GET /favicon.ico from ::1
+2025-11-13 13:41:46.028 +03:00 [INF] Outgoing Response:  responded 404 in 3ms
+2025-11-13 13:41:59.316 +03:00 [INF] Incoming Request: GET /api/Categories from ::1
+2025-11-13 13:41:59.542 +03:00 [INF] GetAllCategories endpoint called.
+2025-11-13 13:41:59.919 +03:00 [WRN] No store type was specified for the decimal property 'Price' on entity type 'MenuItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-11-13 13:41:59.922 +03:00 [WRN] No store type was specified for the decimal property 'TotalPrice' on entity type 'Order'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-11-13 13:41:59.923 +03:00 [WRN] No store type was specified for the decimal property 'Price' on entity type 'OrderItem'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2025-11-13 13:42:00.330 +03:00 [INF] GetAllCategories endpoint finished.KafeApi.Application.Dtos.ResponseDtos.ResponseDto`1[System.Collections.Generic.List`1[KafeApi.Application.Dtos.CategoryDto.ResultCategoryDto]]
+2025-11-13 13:42:00.343 +03:00 [INF] Outgoing Response:  responded 200 in 1027ms

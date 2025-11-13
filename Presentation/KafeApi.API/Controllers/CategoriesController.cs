@@ -22,7 +22,7 @@ namespace KafeApi.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCategories()
         {
-            _logger.LogInformation("GetAllCategories endpoint called.");
+            _logger.LogInformation("GetAllCategories endpoint called.");// zaten global olarak loglama yapılıyor. Burdaki ise özel loglama için
             var categories = await _categoryServices.GetAllCategories();// burası bize responseDto döndürüyor
             _logger.LogInformation("GetAllCategories endpoint finished."+ categories);
             return CreateResponse(categories);

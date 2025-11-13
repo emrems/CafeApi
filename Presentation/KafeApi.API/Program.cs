@@ -21,6 +21,7 @@ using System.Text;
 using KafeApi.Persistance.Context.Identity;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
+using KafeApi.Persistance.Middlewares;
 
 internal class Program
 {
@@ -146,6 +147,7 @@ internal class Program
 
 
         app.UseHttpsRedirection();
+        app.UseMiddleware<SerilogMiddleware>();
         app.UseAuthentication();
 
         app.UseAuthorization();
