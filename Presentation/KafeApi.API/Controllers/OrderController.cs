@@ -1,5 +1,6 @@
 ﻿using KafeApi.Application.Dtos.OrderDtos;
 using KafeApi.Application.Services.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +29,8 @@ namespace KafeApi.API.Controllers
             var result = await _orderService.GetDetailById(id);
             return CreateResponse(result);
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDto createOrderDto)
         {
@@ -35,6 +38,7 @@ namespace KafeApi.API.Controllers
             return CreateResponse(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IActionResult> UpdateOrder([FromBody] UpdateOrderDto updateOrderDto)
         {
@@ -48,12 +52,16 @@ namespace KafeApi.API.Controllers
             return CreateResponse(result);
         }
 
+
+        [Authorize(Roles = "Admin")]
         [HttpPut("complete/{id}")]
         public async Task<IActionResult> CompleteOrder(int id)
         {
             var result = await _orderService.CompleteOrder(id);
             return CreateResponse(result);
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpPut("cancel/{id}")]
         public async Task<IActionResult> CancelOrder(int id)
         {
@@ -68,6 +76,8 @@ namespace KafeApi.API.Controllers
         //    return CreateResponse(result);
 
         //}
+
+        [Authorize(Roles = "Admin")]
 
         [HttpPut("paid")]
         public async Task<IActionResult> MarkOrderAsPaid(int id)

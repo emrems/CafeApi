@@ -1,6 +1,7 @@
 ﻿using KafeApi.Application.Dtos.ResponseDtos;
 using KafeApi.Application.Dtos.TableDtos;
 using KafeApi.Application.Services.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KafeApi.API.Controllers
@@ -46,12 +47,16 @@ namespace KafeApi.API.Controllers
             return CreateResponse(result);
         }
 
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateTable([FromBody] CreateTableDto createTableDto)
         {
             var result = await _tableService.CreateTable(createTableDto);
             return CreateResponse(result);
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IActionResult> UpdateTable([FromBody] UpdateTableDto updateTableDto)
         {
@@ -59,6 +64,8 @@ namespace KafeApi.API.Controllers
             return CreateResponse(result);
         }
 
+
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTable(int id)
         {
@@ -66,12 +73,15 @@ namespace KafeApi.API.Controllers
             return CreateResponse(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPatch("UpdateTableStatusById/{id}")]
         public async Task<IActionResult> UpdateTableStatusById(int id)
         {
             var result = await _tableService.UpdateTableStatusById(id);
             return CreateResponse(result);
         }
+
+        [Authorize(Roles = "Admin")]
 
         [HttpPatch("UpdateTableStatusByTableNumber/{tableNumber}")]
         public async Task<IActionResult> UpdateTableStatusByTableNumber(int tableNumber)

@@ -47,6 +47,7 @@ namespace KafeApi.API.Controllers
             return CreateResponse(result);    
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryDto dto)
         {
@@ -54,6 +55,7 @@ namespace KafeApi.API.Controllers
             return CreateResponse(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
