@@ -11,16 +11,20 @@ namespace KafeApi.API.Controllers
     public class CategoriesController : BaseController
     {
         private readonly ICategoriyServices _categoryServices;
+        private readonly ILogger<CategoriesController> _logger;
 
-        public CategoriesController(ICategoriyServices categoryServices)
+        public CategoriesController(ICategoriyServices categoryServices, ILogger<CategoriesController> logger)
         {
             _categoryServices = categoryServices;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllCategories()
         {
+            _logger.LogInformation("GetAllCategories endpoint called.");
             var categories = await _categoryServices.GetAllCategories();// burası bize responseDto döndürüyor
+            _logger.LogInformation("GetAllCategories endpoint finished."+ categories);
             return CreateResponse(categories);
         }
 

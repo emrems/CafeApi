@@ -20,6 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using KafeApi.Persistance.Context.Identity;
 using Microsoft.AspNetCore.Identity;
+using Serilog;
 
 internal class Program
 {
@@ -114,6 +115,13 @@ internal class Program
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddHttpContextAccessor();
+
+        // serilog yapılandırması
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration)
+            .Enrich.FromLogContext()
+            .CreateLogger();
+        builder.Host.UseSerilog();
 
         var app = builder.Build();
        
