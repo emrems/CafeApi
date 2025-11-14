@@ -133,7 +133,7 @@ internal class Program
         builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
         var app = builder.Build();
-       
+       app.UseIpRateLimiting();
 
         // HTTP istek hattını yapılandır (Configure the HTTP request pipeline)
         // Her şey app.Build() sonrasında burada olmalı
@@ -143,7 +143,7 @@ internal class Program
             app.MapOpenApi();
         }
 
-        app.UseIpRateLimiting();
+         
 
         app.MapScalarApiReference(opt =>
         {

@@ -3,6 +3,8 @@ using KafeApi.Application.Dtos.ResponseDtos;
 using KafeApi.Application.Dtos.UserDto;
 using KafeApi.Application.Interfaces;
 using KafeApi.Application.Services.Abstract;
+using KafeApi.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +18,15 @@ namespace KafeApi.Application.Services.Concrete
     {
         private readonly IUserRepository _userRepository;
         private readonly IValidator<RegisterDto> _registerDtoValidator;
+        private readonly UserManager<User> _userManager;
+     //   private readonly RoleManager<> _roleManager;
 
         public UserService(IUserRepository userRepository, IValidator<RegisterDto> registerDtoValidator)
         {
             _userRepository = userRepository;
             _registerDtoValidator = registerDtoValidator;
+           
+            
         }
 
         public async Task<ResponseDto<object>> AddRole(string email, string roleName)
@@ -96,6 +102,9 @@ namespace KafeApi.Application.Services.Concrete
             }
         }
 
+
+
+        // register olurken role atama işlemi de yapılıyor ancak yapılmamali
         public async Task<ResponseDto<object>> Register(RegisterDto registerDto)
         {
             try
@@ -112,12 +121,25 @@ namespace KafeApi.Application.Services.Concrete
                     };
                 }
                 var result = await _userRepository.RegisterAsync(registerDto);
-                if(result.Succeeded)
+                var resultRole = await _userRepository.AddRoleToUserAsync(registerDto.Email, "Customer");
+                if (result.Succeeded)
                 {
+                    if(resultRole == false)
+                    {
+                        return new ResponseDto<object>
+                        {
+                            Success = false,
+                            Message = "Kayıt işlemi başarılı ancak varsayılan rol ataması başarısız.",
+                            Data = null,
+                            ErrorCode = ErrorCodes.ValidationError
+                        };
+                    }
+
+
                     return new ResponseDto<object>
                     {
                         Success = true,
-                        Message = "Kayıt işlemi başarılı.",
+                        Message = "Kayıt ve rol atama  işlemi başarılı.",
                         Data = null,
                         ErrorCode = null
                     };
