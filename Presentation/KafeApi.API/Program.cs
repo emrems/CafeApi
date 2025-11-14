@@ -22,6 +22,7 @@ using KafeApi.Persistance.Context.Identity;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
 using KafeApi.Persistance.Middlewares;
+using AspNetCoreRateLimit;
 
 internal class Program
 {
@@ -124,6 +125,13 @@ internal class Program
             .CreateLogger();
         builder.Host.UseSerilog();
 
+        builder.Services.AddMemoryCache();
+
+        // rate limiting yapılandırması
+        builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+        builder.Services.AddInMemoryRateLimiting();
+        builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
         var app = builder.Build();
        
 
@@ -134,6 +142,8 @@ internal class Program
         {
             app.MapOpenApi();
         }
+
+        app.UseIpRateLimiting();
 
         app.MapScalarApiReference(opt =>
         {
