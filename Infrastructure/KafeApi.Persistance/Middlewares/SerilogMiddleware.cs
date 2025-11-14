@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Serilog;
+using Serilog.Context;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,27 +25,37 @@ namespace KafeApi.Persistance.Middlewares
 
             var request = context.Request;
             var ip = context.Connection.RemoteIpAddress?.ToString();
+            var userName = context.User?.Identity?.Name ?? "Bilinmeyen";
+            var requestPath = request.Path;
 
-            Log.Logger.Information("Incoming Request: {Method} {Path} from {IP}",
-                request.Method,
-                request.Path,
-                ip);
+            using(LogContext.PushProperty("UserName", userName))
+            using (LogContext.PushProperty("RequestPath", requestPath))
+            using (LogContext.PushProperty("IP", ip))
+            using (LogContext.PushProperty("Method", request.Method))
+            {
+                Log.Logger.Information("Incoming Request: {Method} {Path} from {IP}",
+                  request.Method,
+                  request.Path,
+                  ip);
 
-            try
-            {
-                await _next(context);
-                sw.Stop();
-                Log.Logger.Information("Outgoing Response:  responded {StatusCode} in {ElapsedMilliseconds}ms",
-                    
-                    context.Response.StatusCode,
-                    sw.ElapsedMilliseconds);
+                try
+                {
+                    await _next(context);
+                    sw.Stop();
+                    Log.Logger.Information("Outgoing Response:  responded {StatusCode} in {ElapsedMilliseconds}ms",
+
+                        context.Response.StatusCode,
+                        sw.ElapsedMilliseconds);
+                }
+                catch (Exception ex)
+                {
+                    sw.Stop();
+                    Log.Logger.Error(ex, "Hata. Sure  {ElapsedMilliseconds}ms", sw.ElapsedMilliseconds);
+                    throw;
+                }
             }
-            catch (Exception ex)
-            {
-                sw.Stop();
-                Log.Logger.Error(ex, "Hata. Sure  {ElapsedMilliseconds}ms",sw.ElapsedMilliseconds);
-                throw;
-            }
+
+          
         }
     }
 }
