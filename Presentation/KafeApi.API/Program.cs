@@ -71,6 +71,7 @@ internal class Program
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IAuthService, Authservice>();
+        builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddScoped<TokenHelpers>();
 
         // AutoMapper konfigürasyonu

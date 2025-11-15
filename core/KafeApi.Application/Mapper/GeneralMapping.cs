@@ -3,6 +3,7 @@ using KafeApi.Application.Dtos.CategoryDto;
 using KafeApi.Application.Dtos.MenuItemDto;
 using KafeApi.Application.Dtos.OrderDtos;
 using KafeApi.Application.Dtos.OrderItemDtos;
+using KafeApi.Application.Dtos.ReviewDtos;
 using KafeApi.Application.Dtos.TableDtos;
 using KafeApi.Domain.Entities;
 using System;
@@ -47,6 +48,11 @@ namespace KafeApi.Application.Mapper
             //CreateMap<Category, ResultCategoryDto>()
             //    .ForMember(dest => dest.MenuItems, opt => opt.MapFrom(src => src.MenuItems));
           
+            CreateMap<Review,DetailReviewDto>().ReverseMap();
+            CreateMap<CreateReviewDto, Review>().ReverseMap();
+            CreateMap<UpdateReviewDto, Review>().ReverseMap();
+            CreateMap<ResultReviewDto, Review>().ReverseMap();
+
 
         }
     }
