@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Identity;
 using Serilog;
 using KafeApi.Persistance.Middlewares;
 using AspNetCoreRateLimit;
+using KafeApi.Application.Dtos.ReviewDtos;
 
 internal class Program
 {
@@ -91,6 +92,15 @@ internal class Program
         builder.Services.AddValidatorsFromAssemblyContaining<UpdateOrderDto>();
         builder.Services.AddValidatorsFromAssemblyContaining<UpdateOrderItemDto>();
         builder.Services.AddValidatorsFromAssemblyContaining<UpdateOrderItemDto>();
+
+        builder.Services.AddValidatorsFromAssemblyContaining<UpdateOrderItemDto>();
+
+        builder.Services.AddValidatorsFromAssemblyContaining<CreateReviewDto>();
+
+        builder.Services.AddValidatorsFromAssemblyContaining<DetailReviewDto>();
+
+        builder.Services.AddValidatorsFromAssemblyContaining<ResultReviewDto>();
+
 
 
         // OpenAPI servisini ekle

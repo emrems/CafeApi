@@ -11,6 +11,6 @@ namespace KafeApi.Application.Dtos.ReviewDtos
         public string userId { get; set; }
         public string comment { get; set; }
         public int rating { get; set; }
-        public DateTime createdAt { get; set; }
+        public DateTime createdAt { get; set; } = DateTime.UtcNow;
     }
 }
